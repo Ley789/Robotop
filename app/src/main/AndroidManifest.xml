@@ -31,6 +31,10 @@
             android:name=".CalibrationActivity"
             android:label="@string/title_activity_calibration" >
         </activity>
+        <activity
+            android:name=".BugAlgorithmActivity"
+            android:label="@string/title_activity_bug_algorithm" >
+        </activity>
     </application>
 
 </manifest>
