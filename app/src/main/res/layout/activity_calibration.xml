@@ -20,8 +20,8 @@
         android:layout_height="wrap_content"
         android:text="rotate"
         android:id="@+id/buttonRotate"
-        android:layout_below="@+id/editDistance"
-        android:layout_alignStart="@+id/editDistance"
+        android:layout_below="@+id/editAngle"
+        android:layout_alignStart="@+id/editAngle"
         android:onClick="onButtonRotate" />
 
     <EditText
