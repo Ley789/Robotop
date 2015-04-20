@@ -22,9 +22,9 @@ public class Bug0Alg {
     }
     //Brute force tries to get to the goal and push away obstacles
     public boolean forcedBug0(Point goal){
-        move.robotDrive(goal.getX());
+        move.robotMoveForward(goal.getX());
         move.robotTurn(90);
-        move.robotDrive(goal.getY());
+        move.robotMoveForward(goal.getY());
         return true;
     }
 
@@ -104,7 +104,7 @@ public class Bug0Alg {
             move.robotTurn(-90);
             update = Data.getSensorData();
         }
-        move.robotDrive(midSensorSens -10);
+        move.robotMoveForward(midSensorSens -10);
         return true;
     }
 }
