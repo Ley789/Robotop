@@ -7,4 +7,5 @@ public class moveMockup {
     public moveMockup(){};
     public void robotDrive(int dist){}
     public void robotTurn(int dist){}
+    public int driveFreeSpace(int dist){}
 }
