@@ -11,15 +11,25 @@ public class RobotOdometry {
     private int x;
     private int y;
     private int angle;
+    private static RobotOdometry instance;
 
 
     /**
      * robot looks along the x-axis
      */
-    public RobotOdometry() {
+    private RobotOdometry() {
         this.x = 0;
         this.y = 0;
         this.angle = 0;
+    }
+
+    public static RobotOdometry getInstance(){
+        if(instance == null){
+            instance = new RobotOdometry();
+            return instance;
+        }else{
+            return instance;
+        }
     }
 
     public void setCoord(int range){
