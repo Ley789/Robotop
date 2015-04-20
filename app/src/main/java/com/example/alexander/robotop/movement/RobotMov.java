@@ -17,21 +17,21 @@ import static com.example.alexander.robotop.communication.Connection.comReadWrit
  * @author Alexander
  * This class will implement some utility methods to control the movement of the robot
  */
-public class RobotMovement {
+public class RobotMov {
 	
 	//Static variable to set how often the sensor should be adjusted
 
 	private double adjustMovement = 1.42;
     private double adjustTurn=1;
     private RobotOdometry robotOd;
-    private static RobotMovement instance;
+    private static RobotMov instance;
 
-    private RobotMovement(){
+    private RobotMov(){
         robotOd = RobotOdometry.getInstance();
     }
-    public static RobotMovement getInstance(){
+    public static RobotMov getInstance(){
         if(instance == null){
-            instance = new RobotMovement();
+            instance = new RobotMov();
             return instance;
         }else{
             return instance;
