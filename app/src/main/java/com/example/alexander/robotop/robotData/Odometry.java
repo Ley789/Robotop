@@ -1,4 +1,4 @@
-package com.example.alexander.robotop.RobotData;
+package com.example.alexander.robotop.robotData;
 
 import android.util.Log;
 
@@ -11,6 +11,7 @@ public class Odometry {
     private int x;
     private int y;
     private int angle;
+
 
     /**
      * robot looks along the x-axis
@@ -25,6 +26,14 @@ public class Odometry {
         y = (int)(y + range * Math.sin(angle));
         x = (int)(x + range * Math.cos(angle));
     }
+
+    public void updateAngle(int angleChange){
+        this.angle += angleChange;
+    }
+
+
+
+
 
     public int getX() {
         return x;
