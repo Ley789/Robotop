@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.example.alexander.robotop.communication.Data;
 import com.example.alexander.robotop.modell.NoSpaceToMoveException;
-import com.example.alexander.robotop.modell.OutOfRangeException;
 import com.example.alexander.robotop.robotData.RobotOdometry;
 
 import static com.example.alexander.robotop.communication.Connection.comReadWrite;
@@ -21,7 +20,7 @@ public class RobotMovement {
 	//Static variable to set how often the sensor should be adjusted
 
 	private double adjustMovement = 1.42;
-    private double adjustTurn=1;
+    private double adjustTurn=1.135;
     private RobotOdometry robotOd;
     private static RobotMovement instance;
 
