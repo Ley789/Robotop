@@ -5,6 +5,7 @@ import com.example.alexander.robotop.modell.NoSpaceToMoveException;
 import com.example.alexander.robotop.modell.OutOfRangeException;
 
 import com.example.alexander.robotop.communication.Data;
+import com.example.alexander.robotop.robotData.RobotOdometry;
 
 import android.util.Log;
 
@@ -22,7 +23,20 @@ public class RobotMovement {
 
 	private double adjustMovement = 1.42;
     private double adjustTurn=0.99999999;
+    private RobotOdometry robotOd;
+    private static RobotMovement instance;
 
+    private RobotMovement(){
+        robotOd = RobotOdometry.getInstance();
+    }
+    public static RobotMovement getInstance(){
+        if(instance == null){
+            instance = new RobotMovement();
+            return instance;
+        }else{
+            return instance;
+        }
+    }
 
 
 	public void driveFreeSpace(int distance_cm) throws NoSpaceToMoveException{
@@ -92,7 +106,7 @@ public class RobotMovement {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//Odometry.setCoord(distance_cm);
+		robotOd.setCoord(distance_cm);
 	}
 	//Robot turns a given degree
 	public void robotTurn(int degree) {
@@ -106,7 +120,7 @@ public class RobotMovement {
 					e.printStackTrace();
 				}
 		if(degree!=288){
-			//RobotOdometry.setAngle(degree);
+			robotOd.setAngle(degree);
 		}
 	}
 	//Robot returns Sensor data
