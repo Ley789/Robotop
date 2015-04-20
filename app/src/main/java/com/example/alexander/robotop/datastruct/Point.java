@@ -40,8 +40,17 @@ public class Point {
     public int coordinateDifferenzY(Point goal){
         return (goal.getY() - this.getY());
     }
+
+    @Override
+    public boolean equals(Object obj){
+        if( obj instanceof  Point) {
+            Point p = (Point) obj;
+            return (this.distance(p) < 20);
+        }
+        return false;
+    }
     //returns abs value
-    public static int distance(Point start, Point goal){
-        return (int)(Math.sqrt(Math.pow(goal.getX()- start.getX() ,2) + Math.pow(goal.getY() - start.getY(),2)));
+    public int distance(Point goal){
+        return (int)(Math.sqrt(Math.pow(goal.getX()- this.getX() ,2) + Math.pow(goal.getY() - this.getY(), 2)));
     }
 }

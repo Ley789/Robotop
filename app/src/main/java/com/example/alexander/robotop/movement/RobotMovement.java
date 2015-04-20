@@ -51,10 +51,8 @@ public class RobotMovement {
 
 	//approaches obstacle, but leaves 10cm security-distance. If range out of sensors, exception.
 	//Returns moved distance.
-	public double approach(int distance_cm) throws OutOfRangeException{
-		if (distance_cm >80){
-			throw new OutOfRangeException("Not in sensor-range");
-		}
+	private int approach(int distance_cm){
+
 		if(distance_cm<10){
 			return 0;
 		}
@@ -66,7 +64,7 @@ public class RobotMovement {
 
 	//Drives distances bigger than 80cm.
 	//Returns difference between moved distance and expected distance.
-	public double robotMoveForward(int distance_cm) throws OutOfRangeException {
+	public double robotMoveForward(int distance_cm){
 		
 		int steps = distance_cm / 80;
 		int difference = distance_cm - (steps * 80);
