@@ -40,7 +40,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void onButtonCalibration(View view){
-        Intent i = new  Intent(this, CalibrationActivity.class);
+        Intent i = new Intent(this,CalibrationActivity.class);
         startActivity(i);
     }
 }

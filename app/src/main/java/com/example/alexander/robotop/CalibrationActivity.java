@@ -7,12 +7,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import com.example.alexander.robotop.movement.RobotMovement;
+
 
 public class CalibrationActivity extends ActionBarActivity {
 
     private EditText editAngle;
     private EditText editDistance;
-    //private RobotMovement movement = RobotMovement.g
+    private RobotMovement movement = RobotMovement.getInstance();
 
 
     @Override
@@ -47,10 +49,12 @@ public class CalibrationActivity extends ActionBarActivity {
     }
 
     public void onButtonRotate(View v){
-
+        int degree = Integer.parseInt(editAngle.getText().toString());
+        movement.robotTurn(degree);
     }
 
     public void onButtonDrive(View v){
-
+        int distance = Integer.parseInt(editDistance.getText().toString());
+        movement.robotTurn(distance);
     }
 }
