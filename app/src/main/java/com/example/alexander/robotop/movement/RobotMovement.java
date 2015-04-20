@@ -51,7 +51,7 @@ public class RobotMovement {
 
 	//approaches obstacle, but leaves 10cm security-distance. If range out of sensors, exception.
 	//Returns moved distance.
-	private int approach(int distance_cm){
+	private int approach(int distance_cm)   {
 
 		if(distance_cm<10){
 			return 0;
@@ -106,7 +106,7 @@ public class RobotMovement {
 				new byte[] { 'l',(byte) (degree * adjustTurn), '\r', '\n' }
 				);
 				try {
-					Thread.sleep(calcSleepTime( degree + 1000));
+					Thread.sleep(calcSleepTime(degree/2));
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -156,7 +156,7 @@ public class RobotMovement {
 
 
 	private int calcSleepTime(int length)	{
-		return Math.abs(length * 20);
+		return Math.abs(length * 10);
 	}
 }
 
