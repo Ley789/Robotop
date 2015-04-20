@@ -56,6 +56,10 @@ public class MainActivity extends ActionBarActivity {
         Intent i = new Intent(this,CalibrationActivity.class);
         startActivity(i);
     }
+    public void onButtonBug(View view){
+        Intent i = new Intent(this,BugAlgorithmActivity.class);
+        startActivity(i);
+    }
 
     public void connect() {
 

@@ -21,4 +21,14 @@
         android:id="@+id/log"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bug Alg"
+        android:id="@+id/bug"
+        android:onClick="onButtonBug"
+        android:layout_below="@+id/buttonCalibration"
+        android:layout_alignStart="@+id/buttonCalibration"
+        android:layout_alignEnd="@+id/buttonCalibration" />
 </RelativeLayout>
