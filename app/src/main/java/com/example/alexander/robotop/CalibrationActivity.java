@@ -6,8 +6,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.alexander.robotop.movement.RobotMovement;
+import com.example.alexander.robotop.robotData.RobotOdometry;
 
 
 public class CalibrationActivity extends ActionBarActivity {
@@ -15,6 +17,8 @@ public class CalibrationActivity extends ActionBarActivity {
     private EditText editAngle;
     private EditText editDistance;
     private RobotMovement movement = RobotMovement.getInstance();
+    private TextView odometryLog;
+    private RobotOdometry odometry = RobotOdometry.getInstance();
 
 
     @Override
@@ -23,6 +27,7 @@ public class CalibrationActivity extends ActionBarActivity {
         setContentView(R.layout.activity_calibration);
         editAngle =(EditText) findViewById(R.id.editAngle);
         editDistance = (EditText) findViewById(R.id.editDistance);
+        odometryLog = (TextView) findViewById(R.id.odometryLog);
     }
 
 
@@ -51,10 +56,12 @@ public class CalibrationActivity extends ActionBarActivity {
     public void onButtonRotate(View v){
         int degree = Integer.parseInt(editAngle.getText().toString());
         movement.robotTurn(degree);
+        odometryLog.setText(odometry.toString());
     }
 
     public void onButtonDrive(View v){
         int distance = Integer.parseInt(editDistance.getText().toString());
-        movement.robotTurn(distance);
+        movement.robotMoveForward(distance);
+        odometryLog.setText(odometry.toString());
     }
 }
