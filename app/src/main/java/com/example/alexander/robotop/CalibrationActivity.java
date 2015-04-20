@@ -55,6 +55,6 @@ public class CalibrationActivity extends ActionBarActivity {
 
     public void onButtonDrive(View v){
         int distance = Integer.parseInt(editDistance.getText().toString());
-        movement.robotTurn(distance);
+        movement.robotDrive(distance);
     }
 }
