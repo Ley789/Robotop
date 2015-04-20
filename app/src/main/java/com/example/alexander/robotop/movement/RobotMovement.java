@@ -88,12 +88,7 @@ public class RobotMovement {
 	}
 
 
-	//Robot drives a given distance
-		public void robotDriveWithoutSleep(int distance_cm) {
-			comReadWrite(
-					new byte[] { 'k', (byte)(distance_cm * adjustMovement), '\r', '\n' }
-					);
-		}
+
 
 	//Robot drives a given distance
 	public void robotDrive(int distance_cm) {
@@ -123,10 +118,6 @@ public class RobotMovement {
 			robotOd.setAngle(degree);
 		}
 	}
-	//Robot returns Sensor data
-	public String robotData(){
-		return (comReadWrite(new byte[] { 'q', '\r', '\n' }));
-	}
 	/**
 	 * Robot drives a polygon with n-vertex and k-edges of size the same size.
 	 * @param vertex defines the number of vertex
@@ -155,14 +146,6 @@ public class RobotMovement {
 
 
 
-	public void setAdjustment(int lengthGiven, int lengthExpected){
-		adjustMovement = lengthExpected / (lengthGiven * adjustMovement);
-		Log.d("Faktor"," "+ adjustMovement);
-	}
-
-	private double adjustValue(int lengthGiven, int lengthExpected, double actuallValue ){
-		return (lengthExpected / (lengthGiven * actuallValue));
-	}
 	/**
 	 * 	this method will calculate the distance of the to move and the read values
 	 * @param length
@@ -173,10 +156,8 @@ public class RobotMovement {
 			return true;
 		return false;
 	}
-	
-	public boolean freeSpaceToMove(int length){
-		return freeSpaceToMove(Data.getSensorData(), length);
-	}
+
+
 	private int calcSleepTime(int length)	{
 		return Math.abs(length * 20);
 	}
