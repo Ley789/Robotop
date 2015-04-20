@@ -1,13 +1,12 @@
 package com.example.alexander.robotop.movement;
 
 
-import com.example.alexander.robotop.modell.NoSpaceToMoveException;
-import com.example.alexander.robotop.modell.OutOfRangeException;
+import android.util.Log;
 
 import com.example.alexander.robotop.communication.Data;
+import com.example.alexander.robotop.modell.NoSpaceToMoveException;
+import com.example.alexander.robotop.modell.OutOfRangeException;
 import com.example.alexander.robotop.robotData.RobotOdometry;
-
-import android.util.Log;
 
 import static com.example.alexander.robotop.communication.Connection.comReadWrite;
 
@@ -17,21 +16,21 @@ import static com.example.alexander.robotop.communication.Connection.comReadWrit
  * @author Alexander
  * This class will implement some utility methods to control the movement of the robot
  */
-public class RobotMov {
+public class RobotMovement {
 	
 	//Static variable to set how often the sensor should be adjusted
 
 	private double adjustMovement = 1.42;
     private double adjustTurn=1;
     private RobotOdometry robotOd;
-    private static RobotMov instance;
+    private static RobotMovement instance;
 
-    private RobotMov(){
+    private RobotMovement(){
         robotOd = RobotOdometry.getInstance();
     }
-    public static RobotMov getInstance(){
+    public static RobotMovement getInstance(){
         if(instance == null){
-            instance = new RobotMov();
+            instance = new RobotMovement();
             return instance;
         }else{
             return instance;
