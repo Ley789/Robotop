@@ -64,7 +64,7 @@ public class RobotMovement {
 
 	//Drives distances bigger than 80cm.
 	//Returns difference between moved distance and expected distance.
-	public int robotMoveForward(int distance_cm) {
+	public double robotMoveForward(int distance_cm){
 		
 		int steps = distance_cm / 80;
 		int difference = distance_cm - (steps * 80);
