@@ -2,6 +2,8 @@ package com.example.alexander.robotop.robotData;
 
 import android.util.Log;
 
+import com.example.alexander.robotop.datastruct.Point;
+
 /**
  * Created by michael on 20.04.15.
  */
@@ -71,5 +73,9 @@ public class RobotOdometry {
 
     public void logOdometry(){
         Log.d(TAG, "x: " + x + " | y: " + y + " | angle: " + angle);
+    }
+
+    public Point getPoint(){
+        return new Point(x, y);
     }
 }
