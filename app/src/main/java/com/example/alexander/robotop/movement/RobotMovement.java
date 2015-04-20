@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.example.alexander.robotop.communication.Data;
 import com.example.alexander.robotop.modell.NoSpaceToMoveException;
-import com.example.alexander.robotop.modell.OutOfRangeException;
 import com.example.alexander.robotop.robotData.RobotOdometry;
 
 import static com.example.alexander.robotop.communication.Connection.comReadWrite;
@@ -88,7 +87,7 @@ public class RobotMovement {
 
 
 	//Robot drives a given distance
-	public void robotDrive(int distance_cm) {
+	private void robotDrive(int distance_cm) {
 		comReadWrite(
 				new byte[] { 'k', (byte)(distance_cm * adjustMovement), '\r', '\n' }
 				);
@@ -100,6 +99,8 @@ public class RobotMovement {
 		}
 		robotOd.setCoord(distance_cm);
 	}
+
+
 	//Robot turns a given degree
 	public void robotTurn(int degree) {
 		comReadWrite(
