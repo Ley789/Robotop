@@ -1,5 +1,7 @@
 package com.example.alexander.robotop.movement;
 
+        import com.example.alexander.robotop.communication.Data;
+
         import java.util.ArrayList;
 
 public class Sensor {

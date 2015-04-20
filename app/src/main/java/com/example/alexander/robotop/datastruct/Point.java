@@ -33,6 +33,13 @@ public class Point {
         this.x = x;
     }
 
+    public int coordinateDifferenzX(Point goal){
+        return (goal.getX() - this.getX());
+    }
+
+    public int coordinateDifferenzY(Point goal){
+        return (goal.getY() - this.getY());
+    }
     //returns abs value
     public static int distance(Point start, Point goal){
         return (int)(Math.sqrt(Math.pow(goal.getX()- start.getX() ,2) + Math.pow(goal.getY() - start.getY(),2)));
