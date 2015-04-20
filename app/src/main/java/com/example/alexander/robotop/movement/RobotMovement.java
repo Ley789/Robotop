@@ -63,8 +63,13 @@ public class RobotMovement {
 
 	//Drives distances bigger than 80cm.
 	//Returns difference between moved distance and expected distance.
-	public double robotMoveForward(int distance_cm){
-		
+	public int robotMoveForward(int distance_cm){
+		double si =Math.signum(distance_cm);
+        if (si<0){
+            robotTurn(180);
+            distance_cm=distance_cm*-1;
+        }
+        robotTurn(180);
 		int steps = distance_cm / 80;
 		int difference = distance_cm - (steps * 80);
 		try {
@@ -92,7 +97,7 @@ public class RobotMovement {
 				new byte[] { 'k', (byte)(distance_cm * adjustMovement), '\r', '\n' }
 				);
 		try {
-			Thread.sleep(calcSleepTime(distance_cm));
+			Thread.sleep(calcSleepTime(distance_cm*8));
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -107,7 +112,7 @@ public class RobotMovement {
 				new byte[] { 'l',(byte) (degree * adjustTurn), '\r', '\n' }
 				);
 				try {
-					Thread.sleep(calcSleepTime(degree/2));
+					Thread.sleep(calcSleepTime(degree));
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -116,6 +121,16 @@ public class RobotMovement {
 			robotOd.setAngle(degree);
 		}
 	}
+
+    /*public void robotTurn(int degree){
+        if(degree>0){
+            while(degree >90){
+                degree=degree-90;
+                robotTurn(90);
+            }
+            robotTurn(degree);
+        }
+    }*/
 	/**
 	 * Robot drives a polygon with n-vertex and k-edges of size the same size.
 	 * @param vertex defines the number of vertex
