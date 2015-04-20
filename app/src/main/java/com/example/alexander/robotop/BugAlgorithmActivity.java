@@ -7,7 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
-import com.example.alexander.robotop.bugAlgorithm.Bug0Alg;
+import com.example.alexander.robotop.bugAlgorithms.Bug0Alg;
 import com.example.alexander.robotop.datastruct.Point;
 
 
