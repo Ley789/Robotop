@@ -54,7 +54,7 @@ public class Bug0Alg {
     //Todo add point control to check if bug fails
     private boolean avoidObstacle(Point goal){
         Sensor update = Data.getSensorData();
-        boolean avoided = true;
+        boolean avoided;
         boolean deathEnd;
         Point nearest = odometry.getPoint();
         Point current;
@@ -91,6 +91,7 @@ public class Bug0Alg {
             }
             counter++;
         }
+        move.robotMoveForward(midSensorSens - 15);
         return true;
     }
     private boolean goForward(){
