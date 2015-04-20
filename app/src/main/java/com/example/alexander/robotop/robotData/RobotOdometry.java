@@ -5,7 +5,7 @@ import android.util.Log;
 /**
  * Created by michael on 20.04.15.
  */
-public class Odometry {
+public class RobotOdometry {
 
     private final String TAG = "Odometry";
     private int x;
@@ -16,7 +16,7 @@ public class Odometry {
     /**
      * robot looks along the x-axis
      */
-    public Odometry() {
+    public RobotOdometry() {
         this.x = 0;
         this.y = 0;
         this.angle = 0;
