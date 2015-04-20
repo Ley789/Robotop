@@ -22,7 +22,7 @@ public class RobotMovement {
 	//Static variable to set how often the sensor should be adjusted
 
 	private double adjustMovement = 1.42;
-    private double adjustTurn=0.99999999;
+    private double adjustTurn=1;
     private RobotOdometry robotOd;
     private static RobotMovement instance;
 
