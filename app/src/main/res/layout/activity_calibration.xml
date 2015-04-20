@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:inputType="number"
         android:ems="10"
-        android:id="@+id/editText"
+        android:id="@+id/editAngle"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
@@ -20,15 +20,16 @@
         android:layout_height="wrap_content"
         android:text="rotate"
         android:id="@+id/buttonRotate"
-        android:layout_below="@+id/editText"
-        android:layout_alignStart="@+id/editText" />
+        android:layout_below="@+id/editDistance"
+        android:layout_alignStart="@+id/editDistance"
+        android:onClick="onButtonRotate" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="number"
         android:ems="10"
-        android:id="@+id/editText2"
+        android:id="@+id/editDistance"
         android:layout_below="@+id/buttonRotate"
         android:layout_alignStart="@+id/buttonRotate" />
 
@@ -37,7 +38,8 @@
         android:layout_height="wrap_content"
         android:text="drive"
         android:id="@+id/buttonDrive"
-        android:layout_below="@+id/editText2"
-        android:layout_alignStart="@+id/editText2" />
+        android:layout_below="@+id/editDistance"
+        android:layout_alignStart="@+id/editDistance"
+        android:onClick="onButtonDrive" />
 
 </RelativeLayout>

@@ -1,17 +1,26 @@
 package com.example.alexander.robotop;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 
 
 public class CalibrationActivity extends ActionBarActivity {
+
+    private EditText editAngle;
+    private EditText editDistance;
+    //private RobotMovement movement = RobotMovement.g
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calibration);
+        editAngle =(EditText) findViewById(R.id.editAngle);
+        editDistance = (EditText) findViewById(R.id.editDistance);
     }
 
 
@@ -35,5 +44,13 @@ public class CalibrationActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onButtonRotate(View v){
+
+    }
+
+    public void onButtonDrive(View v){
+
     }
 }
