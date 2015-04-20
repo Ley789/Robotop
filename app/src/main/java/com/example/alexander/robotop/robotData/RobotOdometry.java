@@ -75,6 +75,15 @@ public class RobotOdometry {
         Log.d(TAG, "x: " + x + " | y: " + y + " | angle: " + angle);
     }
 
+    @Override
+    public String toString() {
+        return "RobotOdometry{" +
+                "angle=" + angle +
+                ", y=" + y +
+                ", x=" + x +
+                '}';
+    }
+
     public Point getPoint(){
         return new Point(x, y);
     }
