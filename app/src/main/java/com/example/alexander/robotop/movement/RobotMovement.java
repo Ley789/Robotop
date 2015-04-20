@@ -69,7 +69,6 @@ public class RobotMovement {
             robotTurn(180);
             distance_cm=distance_cm*-1;
         }
-        robotTurn(180);
 		int steps = distance_cm / 80;
 		int difference = distance_cm - (steps * 80);
 		try {
@@ -114,7 +113,7 @@ public class RobotMovement {
 				try {
 					Thread.sleep(calcSleepTime(degree));
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
+					Log.d("sleep", "sleep");
 					e.printStackTrace();
 				}
 		if(degree!=288){
