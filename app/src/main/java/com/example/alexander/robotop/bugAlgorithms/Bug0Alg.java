@@ -93,6 +93,7 @@ public class Bug0Alg {
             update = Data.getSensorData();
             counter++;
         }
+
         move.robotMoveForward(midSensorSens -10);
         return true;
     }
