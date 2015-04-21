@@ -97,7 +97,7 @@ public class RobotMovement {
 		comReadWrite(
 				new byte[] { 'k', adjustedMove(distance_cm), '\r', '\n' }
 				);
-        WaitHelp.waitWhileMoving();
+        WaitHelp.waitWhileMoving(distance_cm);
 		robotOd.setCoord(distance_cm);
 	}
 
@@ -126,7 +126,7 @@ public class RobotMovement {
 		comReadWrite(
 				new byte[] { 'l',(byte) (degree * adjustTurn), '\r', '\n' }
 				);
-        WaitHelp.waitWhileMoving();
+        WaitHelp.waitWhileMoving(degree,'r');
 		if(degree!=288){
 			robotOd.updateAngle(degree);
 		}
