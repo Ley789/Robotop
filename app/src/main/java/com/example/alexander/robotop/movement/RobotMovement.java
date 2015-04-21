@@ -70,6 +70,7 @@ public class RobotMovement {
             robotTurn(180);
             distance_cm=distance_cm*-1;
         }
+        int restDistanceToDrive = distance_cm;
 		int steps = distance_cm / 80;
 		int difference = distance_cm - (steps * 80);
 		try {
@@ -79,13 +80,13 @@ public class RobotMovement {
 				}else{
 					driveFreeSpace(80);
 				}
-				distance_cm -= difference;
+				restDistanceToDrive -= difference;
 			steps--;
-			}while(steps > 0);
+			}while(steps >= 0);
 		} catch (NoSpaceToMoveException e) {
-			distance_cm -= approach(difference);
+			restDistanceToDrive -= approach(difference);
 		}
-		return distance_cm;
+		return restDistanceToDrive;
 	}
 
 

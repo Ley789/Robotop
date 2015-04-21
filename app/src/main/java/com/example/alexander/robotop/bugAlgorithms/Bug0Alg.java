@@ -14,7 +14,7 @@ public class Bug0Alg {
     private static String TAG ="BUG";
 
 
-    private static int aimSens=10;
+    private static int aimSens=15;
     private static int midSensorSens = 50;
     private static int length = 40;
     private static int turnSens = 90;
