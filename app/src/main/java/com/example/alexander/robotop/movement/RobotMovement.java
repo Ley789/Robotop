@@ -119,7 +119,7 @@ public class RobotMovement {
         }else if(v<65){
             r=(byte)((adjustMovement*v)-2);
         }else{
-            r=(byte)((adjustMovement*v)-3);
+            r=(byte)((adjustMovement*v)+3);
         }
 
         return r;
@@ -127,12 +127,12 @@ public class RobotMovement {
 
 
 	//Robot turns a given degree
-	public void robotPrivateTurn(int degree) {
+	public void robotTurn(int degree) {
 		comReadWrite(
 				new byte[] { 'l',(byte) (degree * adjustTurn), '\r', '\n' }
 				);
 				try {
-					Thread.sleep(calcSleepTime((int) (degree*1.4)));
+					Thread.sleep(calcSleepTime(degree));
 				} catch (InterruptedException e) {
 					Log.d("sleep", "sleep");
 					e.printStackTrace();
@@ -142,17 +142,15 @@ public class RobotMovement {
 		}
 	}
 
-    public void robotTurn(int degree){
-        degree=degree%360;
-        int si = (int) Math.signum(degree);
-        degree=degree*si;
-        while(degree >90){
+    /*public void robotTurn(int degree){
+        if(degree>0){
+            while(degree >90){
                 degree=degree-90;
-                robotTurn(si*90);
+                robotTurn(90);
+            }
+            robotTurn(degree);
         }
-            robotPrivateTurn(si*degree);
-
-    }
+    }*/
 	/**
 	 * Robot drives a polygon with n-vertex and k-edges of size the same size.
 	 * @param vertex defines the number of vertex
