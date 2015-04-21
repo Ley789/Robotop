@@ -97,12 +97,7 @@ public class RobotMovement {
 		comReadWrite(
 				new byte[] { 'k', adjustedMove(distance_cm), '\r', '\n' }
 				);
-		try {
-			Thread.sleep(calcSleepTime(distance_cm*8));
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        WaitHelp.waitWhileMoving();
 		robotOd.setCoord(distance_cm);
 	}
 
@@ -131,12 +126,7 @@ public class RobotMovement {
 		comReadWrite(
 				new byte[] { 'l',(byte) (degree * adjustTurn), '\r', '\n' }
 				);
-				try {
-					Thread.sleep(calcSleepTime((int) (degree*1.4)));
-				} catch (InterruptedException e) {
-					Log.d("sleep", "sleep");
-					e.printStackTrace();
-				}
+        WaitHelp.waitWhileMoving();
 		if(degree!=288){
 			robotOd.updateAngle(degree);
 		}
@@ -192,10 +182,6 @@ public class RobotMovement {
 		return false;
 	}
 
-
-	private int calcSleepTime(int length)	{
-		return Math.abs(length * 10);
-	}
 }
 
 
