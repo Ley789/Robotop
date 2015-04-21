@@ -60,6 +60,9 @@ public class MainActivity extends ActionBarActivity {
         Intent i = new Intent(this,BugAlgorithmActivity.class);
         startActivity(i);
     }
+    public void onButtonConnect(View view){
+        connect();
+    }
 
     public void connect() {
 

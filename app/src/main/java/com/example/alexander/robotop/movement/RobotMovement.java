@@ -65,7 +65,7 @@ public class RobotMovement {
 	//Drives distances bigger than 80cm.
 	//Returns difference between moved distance and expected distance.
 	public int robotMoveForward(int distance_cm){
-		double si =Math.signum(distance_cm);
+        double si =Math.signum(distance_cm);
         if (si<0){
             robotTurn(180);
             distance_cm=distance_cm*-1;
@@ -137,7 +137,7 @@ public class RobotMovement {
 					e.printStackTrace();
 				}
 		if(degree!=288){
-			robotOd.setAngle(degree);
+			robotOd.updateAngle(degree);
 		}
 	}
 
