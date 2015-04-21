@@ -131,7 +131,7 @@ public class RobotMovement {
 				new byte[] { 'l',(byte) (degree * adjustTurn), '\r', '\n' }
 				);
 				try {
-					Thread.sleep(calcSleepTime(degree));
+					Thread.sleep(calcSleepTime((int) (degree*1.4)));
 				} catch (InterruptedException e) {
 					Log.d("sleep", "sleep");
 					e.printStackTrace();
