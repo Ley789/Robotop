@@ -1,4 +1,6 @@
 package com.example.alexander.robotop.bugAlgorithms;
+import android.util.Log;
+
 import com.example.alexander.robotop.communication.Data;
 import com.example.alexander.robotop.datastruct.Point;
 import com.example.alexander.robotop.movement.RobotMovement;
@@ -9,6 +11,9 @@ import com.example.alexander.robotop.robotData.RobotOdometry;
  * Created by Alexander on 20/04/2015.
  */
 public class Bug0Alg {
+    private static String TAG ="BUG";
+
+
     private static int aimSens=10;
     private static int midSensorSens = 50;
     private static int length = 40;
@@ -39,6 +44,7 @@ public class Bug0Alg {
                 }
             }
             currentPosition = odometry.getPoint();
+            move.robotTurn(90 - odometry.getAngle());
             if (move.robotMoveForward(currentPosition.coordinateDifferenzY(goal)) > aimSens) {
                 if (!avoidObstacle(goal)) {
                     return false;
@@ -73,6 +79,7 @@ public class Bug0Alg {
                     nearest = current;
                 }
             }
+            Log.d(TAG, " avoided is :" + avoided);
         }while(avoided);
         return avoided;
     }
@@ -97,12 +104,13 @@ public class Bug0Alg {
         move.robotMoveForward(midSensorSens -10);
         return true;
     }
+
     private boolean goForward(){
         move.robotTurn(-turnSens);
         Sensor update = Data.getSensorData();
         while(update.getMid() < midSensorSens){
             move.robotTurn(turnSens);
-            if(move.robotMoveForward(length) > 10){
+            if(move.robotMoveForward(length) > 15){
                 return false;
             }
             move.robotTurn(-turnSens);
