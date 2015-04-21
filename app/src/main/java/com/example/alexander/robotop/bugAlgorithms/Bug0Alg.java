@@ -83,7 +83,7 @@ public class Bug0Alg {
     private boolean turnLeft(){
         int counter=0;
         Sensor update = Data.getSensorData();
-        while(update.getMid() < midSensorSens && update.getLeft() < 10){
+        while(update.getMid() < midSensorSens){
             move.robotTurn(90);
             if(counter > 4){
                 //we made 360 grad turns so no way out
