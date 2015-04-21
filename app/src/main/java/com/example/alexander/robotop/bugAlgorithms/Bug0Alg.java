@@ -13,6 +13,7 @@ import com.example.alexander.robotop.robotData.RobotOdometry;
 public class Bug0Alg {
     private static String TAG ="BUG";
 
+
     private static int aimSens=10;
     private static int midSensorSens = 50;
     private static int length = 40;
