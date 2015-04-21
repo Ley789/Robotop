@@ -27,6 +27,7 @@ public class RobotMovement {
     private RobotMovement(){
         robotOd = RobotOdometry.getInstance();
     }
+
     public static RobotMovement getInstance(){
         if(instance == null){
             instance = new RobotMovement();
@@ -37,7 +38,7 @@ public class RobotMovement {
     }
 
 
-	public void driveFreeSpace(int distance_cm) throws NoSpaceToMoveException{
+	private void driveFreeSpace(int distance_cm) throws NoSpaceToMoveException{
 		Sensor data = Data.getSensorData();
 		
 		Log.d("FreeSpace",""+data.getMid() + "Expected: "+ distance_cm);
@@ -93,7 +94,7 @@ public class RobotMovement {
 	//Robot drives a given distance
 	private void robotDrive(int distance_cm) {
 		comReadWrite(
-				new byte[] { 'k', (byte)(distance_cm * adjustMovement), '\r', '\n' }
+				new byte[] { 'k', adjustedMove(distance_cm), '\r', '\n' }
 				);
 		try {
 			Thread.sleep(calcSleepTime(distance_cm*8));
@@ -103,6 +104,25 @@ public class RobotMovement {
 		}
 		robotOd.setCoord(distance_cm);
 	}
+
+    private byte adjustedMove(int v){
+        byte r;
+        if(false){
+            r=(byte)(adjustMovement*v);
+            return r;
+        }
+        if(v <25){
+            r=(byte)((adjustMovement*v)+1);
+        }else if(v<45){
+            r=(byte)((adjustMovement*v));
+        }else if(v<65){
+            r=(byte)((adjustMovement*v)-2);
+        }else{
+            r=(byte)((adjustMovement*v)+3);
+        }
+
+        return r;
+    }
 
 
 	//Robot turns a given degree
