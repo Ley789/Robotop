@@ -39,6 +39,7 @@ public class Bug0Alg {
                 }
             }
             currentPosition = odometry.getPoint();
+            move.robotTurn(90 - odometry.getAngle());
             if (move.robotMoveForward(currentPosition.coordinateDifferenzY(goal)) > aimSens) {
                 if (!avoidObstacle(goal)) {
                     return false;
@@ -97,6 +98,7 @@ public class Bug0Alg {
         move.robotMoveForward(midSensorSens -10);
         return true;
     }
+
     private boolean goForward(){
         move.robotTurn(-turnSens);
         Sensor update = Data.getSensorData();
