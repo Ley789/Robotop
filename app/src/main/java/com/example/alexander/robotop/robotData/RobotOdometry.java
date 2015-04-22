@@ -43,6 +43,7 @@ public class RobotOdometry {
 
     public void updateAngle(int angleChange){
         this.angle += angleChange;
+        this.angle = this.angle % 360;
         logOdometry();
     }
 
