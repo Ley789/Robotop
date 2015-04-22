@@ -72,7 +72,7 @@ public class RobotMovement {
         int distance_cm=distance_cm_input;
         double si =Math.signum(distance_cm_input);
         if (si<0){
-            robotPrivateTurn(180);
+            robotTurn(180);
             distance_cm=distance_cm*(-1);
         }
         int restDistanceToDrive = distance_cm;
