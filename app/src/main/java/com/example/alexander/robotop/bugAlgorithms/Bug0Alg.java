@@ -15,10 +15,10 @@ public class Bug0Alg {
 
     private static int aimSens=15;
     private static int midSensorSens = 50;
-    private static int rightSensorSens = 20;
-    private static int leftSensorSens = 20;
+    private static int rightSensorSens = 30;
+    private static int leftSensorSens = 30;
     private static int length = 40;
-    private static int turnSens = 90;
+    private static int turnSens = 45;
 
     private RobotOdometry odometry;
     private RobotMovement move;
@@ -39,6 +39,7 @@ public class Bug0Alg {
         Point currentPosition = odometry.getPoint();
         boolean done = false;
         do {
+            move.robotTurn(odometry.getAngle());
             if (move.robotMoveForward(currentPosition.coordinateDifferenzX(goal)) > aimSens) {
                 if (!avoidObstacle(goal)) {
                     return false;
@@ -77,7 +78,7 @@ public class Bug0Alg {
             }
             currentPosition = odometry.getPoint();
 
-            Log.d(TAG, "degree: " + degreeAim + " | degree turned: " + (odometry.getAngle()) +" distance: " + distance);
+            Log.d(TAG, "degree: " + degreeAim + " | degree odometry: " + (odometry.getAngle()) +" distance: " + distance);
             Log.d(TAG,"position now: " + currentPosition.toString() +" goal is: " + goal.toString());
             done = currentPosition.equals(goal);
             Log.d(TAG,"done: " + done);

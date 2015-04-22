@@ -141,21 +141,24 @@ public class RobotMovement {
     }
 
     private byte adjustTurn(int degree){
+        int si = (int)Math.signum(degree);
+        degree = Math.abs(degree);
         if (degree <35) {
-            return (byte) (degree * 1.200);
+            degree *= 1.2;
         } else if (degree <= 45) {
-            return (byte) (degree * 1.180);
+            degree *= 1.18;
         } else if (degree <= 55) {
-            return (byte) (degree * 1.150);
+            degree *= 1.150;
         } else if (degree <= 65) {
-            return (byte) (degree * 1.144);
+            degree *= 1.44;
         } else if (degree <= 75) {
-            return (byte) (degree * 1.137);
+            degree *= 1.137;
         } else if (degree <= 85) {
-            return (byte) (degree * 1.135);
+            degree *= 1.135;
         } else {
-            return (byte) (degree * 1.135);
+            degree *= 1.135;
         }
+        return (byte) (si*degree);
     }
 
 
