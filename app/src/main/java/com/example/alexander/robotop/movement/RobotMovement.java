@@ -130,14 +130,34 @@ public class RobotMovement {
 
     //Robot turns a given degree
     private void robotPrivateTurn(int degree) {
+        byte turn = adjustTurn(degree);
         comReadWrite(
-                new byte[] { 'l',(byte) (degree * adjustTurn), '\r', '\n' }
+                new byte[] { 'l',turn, '\r', '\n' }
         );
         WaitHelp.waitWhileMoving(degree);
         if(degree!=288){
             robotOd.updateAngle(degree);
         }
     }
+
+    private byte adjustTurn(int degree){
+        if (degree <35) {
+            return (byte) (degree * 1.60);
+        } else if (degree <= 45) {
+            return (byte) (degree * 1.55);
+        } else if (degree <= 55) {
+            return (byte) (degree * 1.50);
+        } else if (degree <= 65) {
+            return (byte) (degree * 1.48);
+        } else if (degree <= 75) {
+            return (byte) (degree * 1.46);
+        } else if (degree <= 85) {
+            return (byte) (degree * 1.44);
+        } else {
+            return (byte) (degree * 1.42);
+        }
+    }
+
 
     public void robotTurn(int deg){
         int degree=deg%360;
@@ -146,6 +166,11 @@ public class RobotMovement {
         while(degree >90){
             degree=degree-90;
             robotPrivateTurn(si*90);
+        }
+        if(degree <25){
+            robotPrivateTurn(si*(90));
+            robotPrivateTurn(si*(-(90-degree)));
+            return;
         }
         robotPrivateTurn(si*degree);
 
