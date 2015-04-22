@@ -23,6 +23,7 @@ public class RobotMovement {
     private double adjustTurn=1.135;
     private RobotOdometry robotOd;
     private static RobotMovement instance;
+    private static int maxDrive = 80;
 
     private RobotMovement(){
         robotOd = RobotOdometry.getInstance();
@@ -67,7 +68,7 @@ public class RobotMovement {
 	public int robotMoveForward(int distance_cm){
         double si =Math.signum(distance_cm);
         if (si<0){
-            robotTurn(180);
+            robotPrivateTurn(180);
             distance_cm=distance_cm*-1;
         }
         int restDistanceToDrive = distance_cm;
@@ -127,7 +128,7 @@ public class RobotMovement {
 
 
 	//Robot turns a given degree
-	public void robotPrivateTurn(int degree) {
+	private void robotPrivateTurn(int degree) {
 		comReadWrite(
 				new byte[] { 'l',(byte) (degree * adjustTurn), '\r', '\n' }
 				);
@@ -142,9 +143,9 @@ public class RobotMovement {
 		}
 	}
 
-    public void robotTurn(int degree){
-        degree=degree%360;
-        int si = (int) Math.signum(degree);
+    public void robotTurn(int deg){
+        int degree=deg%360;
+        int si = (int) Math.signum(deg);
         degree=degree*si;
         while(degree >90){
                 degree=degree-90;
