@@ -80,7 +80,7 @@ public class Bug0Alg {
     }
 
     //Todo add point control to check if bug fails
-    private boolean avoidObstacle(Point goal){
+    public boolean avoidObstacle(Point goal){
         Sensor update = Data.getSensorData();
         boolean avoided = true;
         boolean deathEnd;

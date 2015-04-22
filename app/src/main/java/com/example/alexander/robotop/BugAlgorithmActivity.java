@@ -63,6 +63,10 @@ public class BugAlgorithmActivity extends ActionBarActivity {
         readAndSetPoint();
         bug.bug0d(goal);
     }
+
+    public void onButtonTest(View v){
+        bug.avoidObstacle(new Point(100,100));
+    }
     public void readAndSetPoint(){
         int x = Integer.parseInt(xAchse.getText().toString());
         int y = Integer.parseInt(yAchse.getText().toString());
