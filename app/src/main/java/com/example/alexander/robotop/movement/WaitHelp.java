@@ -23,17 +23,18 @@ public class WaitHelp {
             a2 = a1;
             b2 = b1;
             c2 = c1;
-            try {
-                Thread.sleep(100);
+            /*try {
+                Thread.sleep(50);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }
+            }*/
             //try-catch only for developement;
             try {
                 mov = Data.getOdometryData();
                 a1 = mov.get(0);
                 b1 = mov.get(1);
                 c1 = mov.get(2);
+                Log.d("JOHN","WAYTE");
             }catch (Exception e){
                 Log.d(e.toString(), "waiting");
                 waitWhileMoving(value,0);
