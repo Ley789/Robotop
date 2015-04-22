@@ -80,7 +80,7 @@ public class RobotMovement {
 				if(steps == 0){
 					driveFreeSpace(difference);
 				}else{
-					driveFreeSpace(80);
+					driveFreeSpace(maxDrive);
 				}
 				restDistanceToDrive -= difference;
 			steps--;
