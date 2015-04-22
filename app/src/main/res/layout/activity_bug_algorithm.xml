@@ -42,4 +42,13 @@
         android:layout_below="@+id/xAchse"
         android:layout_alignParentStart="true"
         android:inputType="numberSigned" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bug0 D"
+        android:id="@+id/btn_bug0d"
+        android:layout_alignTop="@+id/btn_bug0"
+        android:layout_alignEnd="@+id/yAchse"
+        android:onClick="onButtonBug0d"/>
 </RelativeLayout>

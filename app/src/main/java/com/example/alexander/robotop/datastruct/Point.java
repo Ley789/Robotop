@@ -49,6 +49,18 @@ public class Point {
         }
         return false;
     }
+    public int degreeToPoint(Point goal){
+        int triLength = this.coordinateDifferenzX(goal);
+        int triHight = this.coordinateDifferenzY(goal);
+        if(triLength == 0) {
+            return 90;
+        }
+        if(triHight == 0){
+            return 0;
+        }
+        return (int)Math.toDegrees(Math.atan(triHight/triLength));
+    }
+
     //returns abs value
     public int distance(Point goal){
         return (int)(Math.sqrt(Math.pow(goal.getX()- this.getX() ,2) + Math.pow(goal.getY() - this.getY(), 2)));
