@@ -133,7 +133,7 @@ public class RobotMovement {
         comReadWrite(
                 new byte[] { 'l',(byte) (degree * adjustTurn), '\r', '\n' }
         );
-        WaitHelp.waitWhileMoving(degree,'r');
+        WaitHelp.waitWhileMoving(degree);
         if(degree!=288){
             robotOd.updateAngle(degree);
         }
