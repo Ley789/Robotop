@@ -144,13 +144,13 @@ public class RobotMovement {
         int si = (int)Math.signum(degree);
         degree = Math.abs(degree);
         if (degree <35) {
-            degree *= 1.2;
+            degree *= 1.2*1.15;
         } else if (degree <= 45) {
             degree *= 1.18;
         } else if (degree <= 55) {
-            degree *= 1.150;
+            degree *= 1.150*1.11;
         } else if (degree <= 65) {
-            degree *= 1.44;
+            degree *= 1.44*0.8;
         } else if (degree <= 75) {
             degree *= 1.137;
         } else if (degree <= 85) {
