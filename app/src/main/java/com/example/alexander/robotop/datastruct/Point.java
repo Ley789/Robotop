@@ -63,6 +63,6 @@ public class Point {
 
     //returns abs value
     public int distance(Point goal){
-        return (int)(Math.sqrt(Math.pow(goal.getX()- this.getX() ,2) + Math.pow(goal.getY() - this.getY(), 2)));
+        return (int)(Math.sqrt(Math.pow(this.coordinateDifferenzX(goal) ,2) + Math.pow(this.coordinateDifferenzY(goal), 2)));
     }
 }

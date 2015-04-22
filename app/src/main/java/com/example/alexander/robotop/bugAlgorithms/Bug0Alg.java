@@ -74,6 +74,7 @@ public class Bug0Alg {
                     return false;
                 }
             }
+            currentPosition = odometry.getPoint();
             done = currentPosition.equals(goal);
         }while(done);
         return true;
