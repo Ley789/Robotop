@@ -23,11 +23,11 @@ public class WaitHelp {
             a2 = a1;
             b2 = b1;
             c2 = c1;
-            /*try {
-                Thread.sleep(50);
+            try {
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }*/
+            }
             //try-catch only for developement;
             try {
                 mov = Data.getOdometryData();
