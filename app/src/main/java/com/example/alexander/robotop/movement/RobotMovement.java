@@ -66,6 +66,7 @@ public class RobotMovement {
 
     //Drives distances bigger than 80cm.
     //Returns difference between moved distance and expected distance.
+    //TODO check right and left sensor...if around 10, need to test and adjust stop
     public int robotMoveForward(int distance_cm_input){
         if(distance_cm_input==0){
             return 0;

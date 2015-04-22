@@ -51,8 +51,8 @@ public class Point {
         return false;
     }
     public int degreeToPoint(Point goal){
-        int triLength = this.coordinateDifferenzX(goal);
-        int triHight = this.coordinateDifferenzY(goal);
+        double triLength = (double)this.coordinateDifferenzX(goal);
+        double triHight =  (double)this.coordinateDifferenzY(goal);
         if(triLength == 0) {
             return 90;
         }
@@ -69,7 +69,7 @@ public class Point {
         else if(triLength < 0 && triHight < 0){
             return (int)(Math.toDegrees(Math.atan(triHight/ triLength)) +180);
         }else {
-            return (int) -Math.toDegrees(Math.atan(triHight / -triLength));
+            return (int)(-Math.toDegrees(Math.atan(-triHight /triLength)));
         }
     }
 

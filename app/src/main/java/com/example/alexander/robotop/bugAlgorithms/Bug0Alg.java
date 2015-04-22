@@ -15,8 +15,8 @@ public class Bug0Alg {
 
     private static int aimSens=15;
     private static int midSensorSens = 50;
-    private static int rightSensorSens = 30;
-    private static int leftSensorSens = 30;
+    private static int rightSensorSens = 35;
+    private static int leftSensorSens = 35;
     private static int length = 40;
     private static int turnSens = 45;
 
@@ -67,6 +67,7 @@ public class Bug0Alg {
         do{
             degreeAim = currentPosition.degreeToPoint(goal);
             distance = currentPosition.distance(goal);
+            Log.d(TAG, "degree: " + degreeAim + " | degree odometry: " + (odometry.getAngle()) +" distance: " + distance);
             //we need to adjust the robot to the calculated degree
             //we do that by subtracting his current angle from the degree he needs to turn
             move.robotTurn(degreeAim - odometry.getAngle());
@@ -78,7 +79,6 @@ public class Bug0Alg {
             }
             currentPosition = odometry.getPoint();
 
-            Log.d(TAG, "degree: " + degreeAim + " | degree odometry: " + (odometry.getAngle()) +" distance: " + distance);
             Log.d(TAG,"position now: " + currentPosition.toString() +" goal is: " + goal.toString());
             done = currentPosition.equals(goal);
             Log.d(TAG,"done: " + done);
@@ -128,7 +128,7 @@ public class Bug0Alg {
     private boolean goForward(){
         move.robotTurn(-turnSens);
         Sensor update = Data.getSensorData();
-        while(update.getMid() < midSensorSens || update.getRight() < rightSensorSens/4 || update.getLeft() < leftSensorSens/4){
+        while(update.getMid() < midSensorSens || update.getRight() < rightSensorSens/2 || update.getLeft() < leftSensorSens/2){
             move.robotTurn(turnSens);
             if(move.robotMoveForward(length) > 15){
                 return false;
