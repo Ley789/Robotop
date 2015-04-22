@@ -23,6 +23,7 @@ public class RobotMovement {
     private double adjustTurn=1.135;
     private RobotOdometry robotOd;
     private static RobotMovement instance;
+    private static int maxDrive = 80;
 
     private RobotMovement(){
         robotOd = RobotOdometry.getInstance();
@@ -64,15 +65,16 @@ public class RobotMovement {
 
 	//Drives distances bigger than 80cm.
 	//Returns difference between moved distance and expected distance.
-	public int robotMoveForward(int distance_cm){
-        double si =Math.signum(distance_cm);
+	public int robotMoveForward(int distance_cm_input){
+        int distance_cm=distance_cm_input;
+        double si =Math.signum(distance_cm_input);
         if (si<0){
             robotPrivateTurn(180);
-            distance_cm=distance_cm*-1;
+            distance_cm=distance_cm*(-1);
         }
         int restDistanceToDrive = distance_cm;
-		int steps = distance_cm / 80;
-		int difference = distance_cm - (steps * 80);
+		int steps = distance_cm / maxDrive;
+		int difference = distance_cm - (steps * maxDrive);
 		try {
 			do{
 				if(steps == 0){
@@ -103,10 +105,10 @@ public class RobotMovement {
 
     private byte adjustedMove(int v){
         byte r;
-        if(false){
+        /*if(false){
             r=(byte)(adjustMovement*v);
             return r;
-        }
+        }*/
         if(v <25){
             r=(byte)((adjustMovement*v)+1);
         }else if(v<45){
@@ -140,7 +142,7 @@ public class RobotMovement {
                 degree=degree-90;
                 robotTurn(si*90);
         }
-            robotPrivateTurn(si*degree);
+        robotPrivateTurn(degree);
 
     }
 	/**
@@ -176,7 +178,7 @@ public class RobotMovement {
 	 * @param length
 	 * @return true if the robot can move
 	 */
-	public boolean freeSpaceToMove(Sensor measuredValues, int length){
+	private boolean freeSpaceToMove(Sensor measuredValues, int length){
 		if(measuredValues.getMid() - length > 15 )
 			return true;
 		return false;

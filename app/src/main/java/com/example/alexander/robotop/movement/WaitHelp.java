@@ -1,5 +1,7 @@
 package com.example.alexander.robotop.movement;
 
+import android.util.Log;
+
 import com.example.alexander.robotop.communication.Data;
 
 import java.util.ArrayList;
@@ -12,15 +14,14 @@ import static com.example.alexander.robotop.communication.Connection.comReadWrit
  */
 public class WaitHelp {
 
-    public static void waitWhileMoving(){
-        ArrayList<Integer> mov = Data.getOdometryData();
+    public static void waitWhileMoving(int value){
         int a1=0;
         int a2=1;
         int b1=0;
         int b2=1;
         int c1=0;
         int c2=1;
-
+        ArrayList<Integer> mov;
         while(a1!=a2 || b1!=b2 || c1!=c2 ) {
             a2 = a1;
             b2 = b1;
@@ -30,14 +31,22 @@ public class WaitHelp {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            //try-catch only for developement;
+            try {
+                mov = Data.getOdometryData();
+                a1 = mov.get(0) + mov.get(1);
+                b1 = mov.get(2) + mov.get(3);
+                c1 = mov.get(4) + mov.get(5);
+            }catch (Exception e){
+                Log.d(e.toString(), "waiting");
+                waitWhileMoving(value,0);
 
-            a1 = mov.get(0)+ mov.get(1);
-            b1 = mov.get(2)+mov.get(3);
-            c1 = mov.get(4)+mov.get(5);
-        }
+            }
+
+            }
     }
 
-    public static void waitWhileMoving(int value){
+    public static void waitWhileMoving(int value, int v){
       long sl = 20*Math.abs(value);
 
         try {
