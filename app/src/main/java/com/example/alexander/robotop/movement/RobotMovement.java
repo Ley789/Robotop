@@ -66,6 +66,9 @@ public class RobotMovement {
     //Drives distances bigger than 80cm.
     //Returns difference between moved distance and expected distance.
     public int robotMoveForward(int distance_cm_input){
+        if(distance_cm_input==0){
+            return 0;
+        }
         int distance_cm=distance_cm_input;
         double si =Math.signum(distance_cm_input);
         if (si<0){
