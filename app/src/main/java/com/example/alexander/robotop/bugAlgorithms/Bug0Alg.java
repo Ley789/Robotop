@@ -13,11 +13,12 @@ import com.example.alexander.robotop.robotData.RobotOdometry;
 public class Bug0Alg {
     private static String TAG ="BUG";
 
-
     private static int aimSens=15;
     private static int midSensorSens = 50;
+    private static int rightSensorSens = 20;
+    private static int leftSensorSens = 20;
     private static int length = 40;
-    private static int turnSens = 90;
+    private static int turnSens = 45;
 
     private RobotOdometry odometry;
     private RobotMovement move;
@@ -92,9 +93,7 @@ public class Bug0Alg {
         Point nearest = odometry.getPoint();
         Point current;
         do {
-            if (!turnLeft()) {
-                return false;
-            }
+            turnLeft();
             avoided = goForward();
 
             current = odometry.getPoint();
@@ -115,27 +114,20 @@ public class Bug0Alg {
      *
      * @return true if succeeded else failed
      */
-    private boolean turnLeft(){
-        int counter=0;
+    private void turnLeft(){
         Sensor update = Data.getSensorData();
-        while(update.getMid() < midSensorSens){
+        while(update.getMid() < midSensorSens || update.getRight() < rightSensorSens){
             move.robotTurn(turnSens);
-            if(counter > 4){
-                //we made 360 grad turns so no way out
-                return false;
-            }
             update = Data.getSensorData();
-            counter++;
         }
 
         move.robotMoveForward(midSensorSens -10);
-        return true;
     }
 
     private boolean goForward(){
         move.robotTurn(-turnSens);
         Sensor update = Data.getSensorData();
-        while(update.getMid() < midSensorSens){
+        while(update.getMid() < midSensorSens || update.getRight() < rightSensorSens/4 || update.getLeft() < leftSensorSens/4){
             move.robotTurn(turnSens);
             if(move.robotMoveForward(length) > 15){
                 return false;
