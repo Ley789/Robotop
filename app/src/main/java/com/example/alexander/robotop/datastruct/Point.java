@@ -4,6 +4,7 @@ package com.example.alexander.robotop.datastruct;
  * Created by Alexander on 20/04/2015.
  */
 public class Point {
+    private static int Sensibility = 20;
 
     private int x;
     private int y;
@@ -45,7 +46,7 @@ public class Point {
     public boolean equals(Object obj){
         if( obj instanceof  Point) {
             Point p = (Point) obj;
-            return (this.distance(p) < 20);
+            return (this.distance(p) < Sensibility);
         }
         return false;
     }
@@ -64,5 +65,9 @@ public class Point {
     //returns abs value
     public int distance(Point goal){
         return (int)(Math.sqrt(Math.pow(goal.getX()- this.getX() ,2) + Math.pow(goal.getY() - this.getY(), 2)));
+    }
+    @Override
+    public String toString(){
+        return ("Point(" + x + "," +y +")");
     }
 }

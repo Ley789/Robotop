@@ -62,18 +62,26 @@ public class Bug0Alg {
         boolean done = true;
         int degreeAim;
         int distance;
+        /*****************************************+
+         * Debugging
+         */
+        Log.d(TAG, "start position: " + currentPosition.toString());
         do{
             degreeAim = currentPosition.degreeToPoint(goal);
             distance = currentPosition.distance(goal);
             //we need to adjust the robot to the calculated degree
             //we do that by subtracting his current angle from the degree he needs to turn
             move.robotTurn(degreeAim - odometry.getAngle());
-            Log.d(TAG, "degree: " + degreeAim + " distance: " + distance);
-            if (move.robotMoveForward(currentPosition.coordinateDifferenzY(goal)) > aimSens) {
+
+            if (move.robotMoveForward(currentPosition.distance(goal)) > aimSens) {
                 if (!avoidObstacle(goal)) {
                     return false;
                 }
             }
+            currentPosition = odometry.getPoint();
+
+            Log.d(TAG, "degree: " + degreeAim + "degree turned: " + (degreeAim - odometry.getAngle()) +" distance: " + distance);
+            Log.d(TAG,"position now: " + currentPosition.toString() +" goal is: " + goal.toString());
             done = currentPosition.equals(goal);
         }while(done);
         return true;
