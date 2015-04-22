@@ -5,9 +5,6 @@ import android.util.Log;
 import com.example.alexander.robotop.communication.Data;
 
 import java.util.ArrayList;
-import java.util.Scanner;
-
-import static com.example.alexander.robotop.communication.Connection.comReadWrite;
 
 /**
  * Created by uli on 21.04.15.
@@ -34,12 +31,14 @@ public class WaitHelp {
             //try-catch only for developement;
             try {
                 mov = Data.getOdometryData();
-                a1 = mov.get(0) + mov.get(1);
-                b1 = mov.get(2) + mov.get(3);
-                c1 = mov.get(4) + mov.get(5);
+                a1 = mov.get(0);
+                b1 = mov.get(1);
+                c1 = mov.get(2);
+                Log.d("success", "wait");
             }catch (Exception e){
                 Log.d(e.toString(), "waiting");
                 waitWhileMoving(value,0);
+                break;
 
             }
 
@@ -47,7 +46,7 @@ public class WaitHelp {
     }
 
     public static void waitWhileMoving(int value, int v){
-      long sl = 20*Math.abs(value);
+      long sl = 30*Math.abs(value);
 
         try {
             Thread.sleep(sl);
