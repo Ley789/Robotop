@@ -15,10 +15,10 @@ public class Bug0Alg {
 
     private static int aimSens=15;
     private static int midSensorSens = 50;
-    private static int rightSensorSens = 20;
-    private static int leftSensorSens = 20;
+    private static int rightSensorSens = 30;
+    private static int leftSensorSens = 30;
     private static int length = 40;
-    private static int turnSens = 90;
+    private static int turnSens = 45;
 
     private RobotOdometry odometry;
     private RobotMovement move;
