@@ -75,7 +75,11 @@ public class Bug0Alg {
                 }
             }
             currentPosition = odometry.getPoint();
+
+            Log.d(TAG, "degree: " + degreeAim + "degree turned: " + (degreeAim - odometry.getAngle()) +" distance: " + distance);
+            Log.d(TAG,"position now: " + currentPosition.toString() +" goal is: " + goal.toString());
             done = currentPosition.equals(goal);
+            Log.d(TAG,"done: " + done);
         }while(!done);
         return true;
     }
