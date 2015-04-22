@@ -57,6 +57,27 @@ public class Bug0Alg {
     }
 
 
+    public boolean bug0d(Point goal){
+        Point currentPosition = odometry.getPoint();
+        boolean done = true;
+        int degreeAim;
+        int distance;
+        do{
+            degreeAim = currentPosition.degreeToPoint(goal);
+            distance = currentPosition.distance(goal);
+            //we need to adjust the robot to the calculated degree
+            //we do that by subtracting his current angle from the degree he needs to turn
+            move.robotTurn(degreeAim - odometry.getAngle());
+            Log.d(TAG, "degree: " + degreeAim + " distance: " + distance);
+            if (move.robotMoveForward(currentPosition.coordinateDifferenzY(goal)) > aimSens) {
+                if (!avoidObstacle(goal)) {
+                    return false;
+                }
+            }
+            done = currentPosition.equals(goal);
+        }while(done);
+        return true;
+    }
 
     //Todo add point control to check if bug fails
     private boolean avoidObstacle(Point goal){
