@@ -37,6 +37,7 @@ public class RobotOdometry {
     public void setCoord(int range){
         y = (int)(y + range * Math.sin(Math.toRadians(angle)));
         x = (int)(x + range * Math.cos(Math.toRadians(angle)));
+        logOdometry();
 
     }
 

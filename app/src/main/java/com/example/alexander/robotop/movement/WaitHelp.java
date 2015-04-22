@@ -34,7 +34,6 @@ public class WaitHelp {
                 a1 = mov.get(0);
                 b1 = mov.get(1);
                 c1 = mov.get(2);
-                Log.d("success", "wait");
             }catch (Exception e){
                 Log.d(e.toString(), "waiting");
                 waitWhileMoving(value,0);

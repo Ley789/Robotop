@@ -73,7 +73,10 @@ public class Bug0Alg {
             //we do that by subtracting his current angle from the degree he needs to turn
             move.robotTurn(degreeAim - odometry.getAngle());
 
-            if (move.robotMoveForward(currentPosition.distance(goal)) > aimSens) {
+            int test = move.robotMoveForward(currentPosition.distance(goal));
+            int test2 = currentPosition.distance(goal);
+            Log.d(TAG, "test: " + test + "test2: " + test2);
+            if (test > aimSens) {
                 if (!avoidObstacle(goal)) {
                     return false;
                 }
@@ -83,7 +86,8 @@ public class Bug0Alg {
             Log.d(TAG, "degree: " + degreeAim + "degree turned: " + (degreeAim - odometry.getAngle()) +" distance: " + distance);
             Log.d(TAG,"position now: " + currentPosition.toString() +" goal is: " + goal.toString());
             done = currentPosition.equals(goal);
-        }while(done);
+            Log.d(TAG,"done: " + done);
+        }while(!done);
         return true;
     }
 
@@ -109,7 +113,7 @@ public class Bug0Alg {
                 }
             }
             Log.d(TAG, " avoided is :" + avoided);
-        }while(avoided);
+        }while(!avoided);
         return avoided;
     }
 

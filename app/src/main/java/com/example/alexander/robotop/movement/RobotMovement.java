@@ -82,14 +82,15 @@ public class RobotMovement {
             do{
                 if(steps == 0){
                     driveFreeSpace(difference);
+                    restDistanceToDrive -= difference;
                 }else{
                     driveFreeSpace(maxDrive);
+                    restDistanceToDrive -= maxDrive;
                 }
-                restDistanceToDrive -= difference;
                 steps--;
             }while(steps >= 0);
         } catch (NoSpaceToMoveException e) {
-            restDistanceToDrive -= approach(difference);
+            restDistanceToDrive -= approach(restDistanceToDrive);
         }
         return restDistanceToDrive;
     }
@@ -140,12 +141,12 @@ public class RobotMovement {
     public void robotTurn(int deg){
         int degree=deg%360;
         int si = (int) Math.signum(deg);
-        degree=degree*si;
+        degree = si * degree;
         while(degree >90){
             degree=degree-90;
-            robotTurn(si*90);
+            robotPrivateTurn(si*90);
         }
-        robotPrivateTurn(degree);
+        robotPrivateTurn(si*degree);
 
     }
     /**
