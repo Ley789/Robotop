@@ -18,7 +18,7 @@ public class Bug0Alg {
     private static int rightSensorSens = 20;
     private static int leftSensorSens = 20;
     private static int length = 40;
-    private static int turnSens = 45;
+    private static int turnSens = 90;
 
     private RobotOdometry odometry;
     private RobotMovement move;
