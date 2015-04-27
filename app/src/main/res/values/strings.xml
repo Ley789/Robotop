@@ -6,5 +6,8 @@
     <string name="title_activity_calibration">CalibrationActivity</string>
     <string name="activateLED">LED on</string>
     <string name="title_activity_bug_algorithm">Bug algorithm</string>
+    <string name="title_activity_detection">Detection</string>
+
+    <string name="hello_world">Hello world!</string>
 
 </resources>

@@ -128,7 +128,7 @@ public class Bug0Alg {
     private boolean goForward(){
         move.robotTurn(-turnSens);
         Sensor update = Data.getSensorData();
-        while(update.getMid() < midSensorSens || update.getRight() < rightSensorSens/2 || update.getLeft() < leftSensorSens/2){
+        while(update.getMid() < midSensorSens || update.getRight() < rightSensorSens * (2/3) || update.getLeft() < leftSensorSens * (2/3)){
             move.robotTurn(turnSens);
             if(move.robotMoveForward(length) > 15){
                 return false;

@@ -147,11 +147,11 @@ public class RobotMovement {
         if (degree <35) {
             degree *= 1.2*1.15;
         } else if (degree <= 45) {
-            degree *= 1.18;
+            degree *= 1.205;
         } else if (degree <= 55) {
             degree *= 1.150*1.11;
         } else if (degree <= 65) {
-            degree *= 1.44*0.8;
+            degree *= 1.44*0.83;
         } else if (degree <= 75) {
             degree *= 1.137;
         } else if (degree <= 85) {
