@@ -141,10 +141,10 @@ public class ColorBlobDetectionActivity extends ActionBarActivity implements Vie
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         mRgba = inputFrame.rgba();
         //Imgproc.cvtColor(mRgba, mRgba, Imgproc.COLOR_RGB2GRAY);
-        int height = mRgba.height();
-        int width = mRgba.width();
-        Core.transpose(mRgba, mRgba);
-        Core.flip(mRgba, mRgba, -1);
+        //int height = mRgba.height();
+        //int width = mRgba.width();
+        //Core.transpose(mRgba, mRgba);
+        //Core.flip(mRgba, mRgba, -1);
         //Imgproc.resize(mRgba, mRgba, new Size(height, width));
         if (mIsColorSelected) {
             mDetector.process(mRgba);
