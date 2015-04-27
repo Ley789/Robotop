@@ -5,7 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/Robotop.iml" filepath="$PROJECT_DIR$/Robotop.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/fTDriver/fTDriver.iml" filepath="$PROJECT_DIR$/fTDriver/fTDriver.iml" />
-      <module fileurl="file://$PROJECT_DIR$/openCV/openCV.iml" filepath="$PROJECT_DIR$/openCV/openCV.iml" />
+      <module fileurl="file://$PROJECT_DIR$/openCVLibrary2410/openCVLibrary2410.iml" filepath="$PROJECT_DIR$/openCVLibrary2410/openCVLibrary2410.iml" />
     </modules>
   </component>
 </project>

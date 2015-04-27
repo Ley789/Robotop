@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 22
-    buildToolsVersion "22.0.0"
+    buildToolsVersion "19.1.0"
 
     defaultConfig {
         applicationId "com.example.alexander.robotop"
@@ -23,5 +23,5 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:22.0.0'
     compile project(':fTDriver')
-    compile project(':openCV')
+    compile project(':openCVLibrary2410')
 }

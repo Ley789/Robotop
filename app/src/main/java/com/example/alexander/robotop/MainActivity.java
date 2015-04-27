@@ -64,6 +64,11 @@ public class MainActivity extends ActionBarActivity {
         connect();
     }
 
+    public void onButtonDetector(View view){
+        Intent i = new Intent(this,ColorBlobDetectionActivity.class);
+        startActivity(i);
+    }
+
     public void connect() {
 
         // TODO implement permission request

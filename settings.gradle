@@ -1,2 +1,3 @@
-include ':app', ':openCV'
+include ':app'
 include ':fTDriver'
+include ':openCVLibrary2410'
