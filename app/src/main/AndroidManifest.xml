@@ -40,11 +40,15 @@
         <activity
             android:name=".ColorBlobDetectionActivity"
             android:label="@string/title_activity_detection"
-            android:screenOrientation="landscape" >
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation">
         </activity>
         <activity
             android:name=".BallcatcherActivity"
-            android:label="@string/title_activity_ballcatcher" >
+            android:label="@string/title_activity_ballcatcher"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation">
+
         </activity>
         <activity
             android:name=".HomographyActivity"

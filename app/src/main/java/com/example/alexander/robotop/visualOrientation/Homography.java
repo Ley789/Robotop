@@ -26,7 +26,7 @@ public class Homography {
         return instance;
     }
 
-    public void setHomographyMatrix(Mat mRgba){
+    public boolean setHomographyMatrix(Mat mRgba){
         final Size mPatternSize = new Size(6, 9); // number of inner corners in the used chessboard pattern
         float x = -48.0f; // coordinates of first detected inner corner on chessboard
         float y = 309.0f;
@@ -55,8 +55,9 @@ public class Homography {
         if (mPatternWasFound){
             // Calib3d.drawChessboardCorners(mRgba, mPatternSize, mCorners, mPatternWasFound); //for visualization
             homography =  Calib3d.findHomography(mCorners, RealWorldC);
+            return true;
         }else{
-            homography =  new Mat();
+         return false;
         }
     }
 
