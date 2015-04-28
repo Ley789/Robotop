@@ -69,6 +69,11 @@ public class MainActivity extends ActionBarActivity {
         startActivity(i);
     }
 
+    public void onButtonHomography(View v){
+        Intent i = new Intent(this,HomographyActivity.class);
+        startActivity(i);
+    }
+
     public void connect() {
 
         // TODO implement permission request
