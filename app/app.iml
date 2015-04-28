@@ -90,6 +90,7 @@
     <orderEntry type="library" exported="" name="support-annotations-22.0.0" level="project" />
     <orderEntry type="module" module-name="fTDriver" exported="" />
     <orderEntry type="module" module-name="openCV" exported="" />
+    <orderEntry type="module" module-name="openCVLibrary2410" />
   </component>
 </module>
 
