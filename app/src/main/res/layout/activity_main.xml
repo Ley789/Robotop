@@ -51,4 +51,13 @@
         android:layout_alignTop="@+id/btn_connect"
         android:layout_alignParentEnd="true"
         android:onClick="onButtonDetector" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="homography"
+        android:id="@+id/btn_homograhy"
+        android:layout_alignTop="@+id/btn_connect"
+        android:layout_centerHorizontal="true"
+        android:onClick="onButtonHomography" />
 </RelativeLayout>
