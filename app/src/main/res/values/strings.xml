@@ -9,5 +9,6 @@
     <string name="title_activity_detection">Detection</string>
 
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_ballcatcher">BallcatcherActivity</string>
 
 </resources>

@@ -39,8 +39,12 @@
         </activity>
         <activity
             android:name=".ColorBlobDetectionActivity"
-            android:screenOrientation ="landscape"
-            android:label="@string/title_activity_detection" >
+            android:label="@string/title_activity_detection"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:name=".BallcatcherActivity"
+            android:label="@string/title_activity_ballcatcher" >
         </activity>
     </application>
 
