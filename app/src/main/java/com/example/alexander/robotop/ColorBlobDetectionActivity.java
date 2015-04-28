@@ -60,10 +60,9 @@ public class ColorBlobDetectionActivity extends ActionBarActivity implements Vie
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         Log.i(TAG, "called onCreate");
         super.onCreate(savedInstanceState);
-
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_detection);
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.color_blob_detection_activity_surface_view);
@@ -140,12 +139,7 @@ public class ColorBlobDetectionActivity extends ActionBarActivity implements Vie
     }
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         mRgba = inputFrame.rgba();
-        //Imgproc.cvtColor(mRgba, mRgba, Imgproc.COLOR_RGB2GRAY);
-        //int height = mRgba.height();
-        //int width = mRgba.width();
-        //Core.transpose(mRgba, mRgba);
-        //Core.flip(mRgba, mRgba, -1);
-        //Imgproc.resize(mRgba, mRgba, new Size(height, width));
+
         if (mIsColorSelected) {
             mDetector.process(mRgba);
             List<MatOfPoint> contours = mDetector.getContours();

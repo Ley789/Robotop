@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Created by michael on 27.04.15.
+
  */
 public class ColorBlobDetector {
 
