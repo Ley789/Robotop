@@ -66,8 +66,8 @@ public class Homography {
         Mat dest = new Mat(1, 1, CvType.CV_32FC2);
         src.put(0, 0, new double[] { cameraSpace.x, cameraSpace.y }); // ps is a point in image coordinates
         Core.perspectiveTransform(src, dest, homography); //homography is your homography matrix
-        //we get points in millimeter, to convert them to cm we multiply by 10
-        return new Point(dest.get(0, 0)[0] * 10 , dest.get(0, 0)[1] *10);
+        //we get points in millimeter, to convert them to cm we divide by 10
+        return new Point(dest.get(0, 0)[0] / 10 , dest.get(0, 0)[1] / 10);
     }
 
 }
