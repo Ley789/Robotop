@@ -46,6 +46,10 @@
             android:name=".BallcatcherActivity"
             android:label="@string/title_activity_ballcatcher" >
         </activity>
+        <activity
+            android:name=".HomographyActivity"
+            android:label="@string/title_activity_homography" >
+        </activity>
     </application>
 
 </manifest>
