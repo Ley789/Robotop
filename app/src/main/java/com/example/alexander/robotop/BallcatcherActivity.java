@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.alexander.robotop.ThreadControll.Executer;
 import com.example.alexander.robotop.visualOrientation.DetectRedBlobs;
+import com.example.alexander.robotop.visualOrientation.Homography;
 
 import java.util.concurrent.ExecutionException;
 
@@ -33,6 +34,7 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
     private static final String TAG = "OCVSample::Activity";
 
     private Executer<Mat> exe = new Executer<Mat>();
+    private Homography homography;
     private CameraBridgeViewBase mOpenCvCameraView;
     private boolean              mIsJavaCamera = true;
     private MenuItem             mItemSwitchCamera = null;
@@ -63,6 +65,7 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
     public void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "called onCreate");
         super.onCreate(savedInstanceState);
+
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         setContentView(R.layout.activity_ballcatcher);
@@ -76,7 +79,7 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
 
         mOpenCvCameraView.setCvCameraViewListener(this);
 
-
+        homography = Homography.getInstance();
     }
 
     @Override
@@ -162,12 +165,16 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
         float[] data2 = new float[rows * elemSize/4];
         if (data2.length>0){
 
+
             circles.get(0, 0, data2); // Points to the first element and reads the whole thing
             // into data2
             //2 wert zeigt position horizontall d.h. diesen wert in einem bestimmten bereich lassen
             //um zum ball zu navigieren
             for(int i=0; i<data2.length; i=i+3) {
+                Log.d(TAG, "Picture coordinates: Y = " + data2[0] +" | X = " +data2[1]);
                 Point center= new Point(data2[i], data2[i+1]);
+                Point world = homography.getPosition(center);
+                Log.d(TAG, "WORLD coordinates: Y = " + world.y +" | X = " + world.x);
                 Core.ellipse( mRgba, center, new Size((double)data2[i+2], (double)data2[i+2]), 0, 0, 360, new Scalar( 255, 0, 255 ), 4, 8, 0 );
             }
         }

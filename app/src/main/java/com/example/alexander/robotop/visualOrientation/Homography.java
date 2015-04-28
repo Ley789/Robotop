@@ -14,7 +14,7 @@ import org.opencv.imgproc.Imgproc;
  * Created by Alexander on 28/04/2015.
  */
 public class Homography {
-    private Mat homography = null;
+    private Mat homography = new Mat();
     private static Homography instance = null;
 
     private Homography(){}
