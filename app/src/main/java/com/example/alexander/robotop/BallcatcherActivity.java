@@ -157,15 +157,15 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
             Mat greenCircles = new Mat();
             Mat result = new Mat();
             exe.execute(new DetectRedBlobs(mRgba));
-            exe.execute(new DetectGreenBlobs(mRgba));
+            //exe.execute(new DetectGreenBlobs(mRgba));
             try {
                 redCircles = exe.getResult();
-                greenCircles = exe.getResult();
+                //greenCircles = exe.getResult();
             } catch (ExecutionException e) {
             } catch (Exception e) {
             }
-            int row;
-            int elements;
+            int row = 0;
+            int elements = 0;
             if(redCircles.rows() > 0) {
                 row = redCircles.rows();
                 elements = (int) redCircles.elemSize();
@@ -174,16 +174,17 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
                 row = greenCircles.rows();
                 elements = (int) greenCircles.elemSize();
                 result = redCircles;
-            } else {
-              return  null;
             }
-
+            if(result.rows() < 1 ){
+                return null;
+            }
             //we only care for the first occurence
             float[] data = new float[row * elements/4];
             result.get(0,0,data);
-            Point goal = homography.getPosition(new Point(data[0],data[1]));
-            bug.bug0d(new com.example.alexander.robotop.datastruct.Point((int) goal.x, (int) goal.y));
-            locatedPosition = true;
+            Point goal = homography.getPosition(new Point(data[1],data[0]));
+            Log.d(TAG, "x " + goal.x +"  y " + goal.y);
+            //bug.forcedBug0(new com.example.alexander.robotop.datastruct.Point((int) goal.x, (int) goal.y));
+            //locatedPosition = true;
         }
         return null;
     }
