@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.example.alexander.robotop.ThreadControll.Executer;
 import com.example.alexander.robotop.bugAlgorithms.Bug0Alg;
+import com.example.alexander.robotop.robotData.RobotTracker;
 import com.example.alexander.robotop.visualOrientation.DetectGreenBlobs;
 import com.example.alexander.robotop.visualOrientation.DetectRedBlobs;
 import com.example.alexander.robotop.visualOrientation.Homography;
@@ -44,7 +45,9 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
     private boolean locatedPosition = false;
     private MenuItem mItemSwitchCamera = null;
     private Bug0Alg bug;
-    private List<Point> pts = new ArrayList<>();
+    RobotTracker tracker;
+
+
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -87,6 +90,8 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
 
         homography = Homography.getInstance();
         bug = new Bug0Alg();
+        tracker = new RobotTracker();
+        new Thread(tracker).start();
     }
 
     @Override
@@ -101,11 +106,12 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
         super.onResume();
         OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_3, this, mLoaderCallback);
     }
-
+    @Override
     public void onDestroy() {
         super.onDestroy();
         if (mOpenCvCameraView != null)
             mOpenCvCameraView.disableView();
+        tracker.stop();
     }
 
     @Override
@@ -176,14 +182,15 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
 
             }
         }
+
         Mat mRgba = inputFrame.rgba();
         Mat newMat = new Mat(mRgba.rows(), mRgba.cols(), mRgba.type());
         int rows = (newMat.rows());
         int cols = (newMat.cols());
         Core.line(newMat, new Point( cols/2,0 ), new Point(cols/2,rows ), new Scalar(255, 255, 255));
         Core.line(newMat, new Point(0, rows/2 ), new Point(cols,rows/2), new Scalar(255, 255, 255));
-        for(int i = 0; i< pts.size()-1; i++) {
-            Core.line(newMat, pts.get(i), pts.get(i+1), new Scalar(255, 0, 0));
+        for(int i = 0; i< tracker.getTrack().size()-1; i++) {
+            Core.line(newMat, tracker.getTrack().get(i), tracker.getTrack().get(i+1), new Scalar(255, 0, 0));
         }
 
         return newMat;
