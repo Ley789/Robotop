@@ -39,6 +39,9 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
     private boolean locatedPosition = false;
     private MenuItem mItemSwitchCamera = null;
     private Bug0Alg bug;
+    RobotTracker tracker;
+
+
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -81,6 +84,8 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
 
         homography = Homography.getInstance();
         bug = new Bug0Alg();
+        tracker = new RobotTracker();
+        new Thread(tracker).start();
     }
 
     @Override
@@ -95,11 +100,12 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
         super.onResume();
         OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_3, this, mLoaderCallback);
     }
-
+    @Override
     public void onDestroy() {
         super.onDestroy();
         if (mOpenCvCameraView != null)
             mOpenCvCameraView.disableView();
+        tracker.stop();
     }
 
     @Override
