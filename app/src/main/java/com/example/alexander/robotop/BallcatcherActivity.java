@@ -88,6 +88,10 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
 
         homography = Homography.getInstance();
         bug = new Bug0Alg();
+
+        pts.add(new Point(1,2));
+        pts.add(new Point(200,500));
+        pts.add(new Point(100,100));
     }
 
     @Override
@@ -179,11 +183,12 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
         }
         Mat mRgba = inputFrame.rgba();
         Mat newMat = new Mat(mRgba.rows(), mRgba.cols(), mRgba.type());
-        pts.add(new MatOfPoint(new Point(1,2)));
-        pts.add(new MatOfPoint(new Point(200,500)));
-        Core.line(mRgba, new Point(0,0), new Point(200,200), new Scalar(255, 0, 0));
 
 
-        return mRgba;
+        for(int i = 0; i< pts.size()-1; i++) {
+            Core.line(newMat, pts.get(i), pts.get(i+1), new Scalar(255, 0, 0));
+        }
+
+        return newMat;
     }
 }
