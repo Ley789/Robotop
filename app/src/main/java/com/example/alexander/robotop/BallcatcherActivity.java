@@ -18,7 +18,8 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.example.alexander.robotop.ThreadControll.Executer;
-import com.example.alexander.robotop.bugAlgorithms.Bug0Alg;
+import com.example.alexander.robotop.movement.BallSearcher;
+import com.example.alexander.robotop.movement.RobotMovement;
 import com.example.alexander.robotop.robotData.RobotTracker;
 import com.example.alexander.robotop.visualOrientation.DetectGreenBlobs;
 import com.example.alexander.robotop.visualOrientation.DetectRedBlobs;
@@ -31,6 +32,15 @@ import java.util.concurrent.ExecutionException;
  */
 public class BallcatcherActivity extends ActionBarActivity  implements CvCameraViewListener2 {
 
+    //Variables for plan delta
+    private boolean catchBall =false;
+    private RobotMovement move = RobotMovement.getInstance();
+    private int length = 20;
+    private int degree = 5;
+    private BallSearcher searcher = new BallSearcher();
+    private int counter = 0;
+    //done
+
     private static final String TAG = "Coord";
 
     private Executer<Mat> exe = new Executer<Mat>();
@@ -39,9 +49,9 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
     private boolean mIsJavaCamera = true;
     private boolean locatedPosition = false;
     private MenuItem mItemSwitchCamera = null;
-    private Bug0Alg bug;
     RobotTracker tracker;
 
+    private com.example.alexander.robotop.datastruct.Point toPoint;
 
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
@@ -84,7 +94,7 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
         mOpenCvCameraView.setCvCameraViewListener(this);
 
         homography = Homography.getInstance();
-        bug = new Bug0Alg();
+
         tracker = new RobotTracker();
         new Thread(tracker).start();
     }
@@ -153,40 +163,54 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
         if (!locatedPosition) {
             Mat mRgba = inputFrame.rgba();
-            Mat redCircles = new Mat();
-            Mat greenCircles = new Mat();
-            Mat result = new Mat();
+            Mat redCircles = null;
+            Mat greenCircles = null;
+            Mat result = null;
             exe.execute(new DetectRedBlobs(mRgba));
-            //exe.execute(new DetectGreenBlobs(mRgba));
+            exe.execute(new DetectGreenBlobs(mRgba));
             try {
                 redCircles = exe.getResult();
-                //greenCircles = exe.getResult();
+                greenCircles = exe.getResult();
             } catch (ExecutionException e) {
             } catch (Exception e) {
             }
             int row = 0;
             int elements = 0;
-            if(redCircles.rows() > 0) {
-                row = redCircles.rows();
-                elements = (int) redCircles.elemSize();
-                result = redCircles;
-            } else if (greenCircles.rows() > 0) {
-                row = greenCircles.rows();
-                elements = (int) greenCircles.elemSize();
-                result = redCircles;
-            }
-            if(result.rows() < 1 ){
+            if(redCircles != null) {
+                 result = redCircles;
+            } else if (greenCircles != null) {
+                result = greenCircles;
+            }else {
+                counter++;
+                if(counter > 5){
+                    counter = 0;
+                    //searcher.run();
+                }
                 return null;
             }
+            row = result.rows();
+            elements = (int) result.elemSize();
             //we only care for the first occurence
             float[] data = new float[row * elements/4];
             result.get(0,0,data);
-            Point goal = homography.getPosition(new Point(data[1],data[0]));
-            Log.d(TAG, "x " + goal.x +"  y " + goal.y);
-            //bug.forcedBug0(new com.example.alexander.robotop.datastruct.Point((int) goal.x, (int) goal.y));
-            //locatedPosition = true;
-
+            //test the turns
+            if(data[1] < 300){
+                move.robotTurn(degree);
+            }else if(data[1] > 450) {
+                move.robotTurn(-degree);
+            }
+            planDelta(data[0]);
         }
         return null;
     }
+    //call planDelata after u entered the aim point
+    public void planDelta(float a){
+        if(a > 650){
+            catchBall = true;
+            locatedPosition = false;
+        }else{
+            move.robotDrive(10);
+        }
+    }
+
 }

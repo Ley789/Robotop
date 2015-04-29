@@ -39,8 +39,10 @@ public class DetectRedBlobs implements Callable<Mat>{
 
         Imgproc.GaussianBlur(res, res, new Size(9,9),0,0);
         Imgproc.HoughCircles(res, circles, Imgproc.CV_HOUGH_GRADIENT, 2, res.height()/4,500, 50, 0, 0);
-
-        return circles;
+        if(circles.rows() > 0) {
+            return circles;
+        }
+        return null;
     }
 }
 

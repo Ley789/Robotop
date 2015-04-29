@@ -36,8 +36,10 @@ public class DetectGreenBlobs implements Callable<Mat>{
         //Imgproc.erode(res, res, erodeElement);
         //Imgproc.erode(res, res, erodeElement);
         Imgproc.HoughCircles(res, circles, Imgproc.CV_HOUGH_GRADIENT, 2, res.height()/4,500, 50, 0, 0);
-
-        return circles;
+        if(circles.rows() > 0) {
+            return circles;
+        }
+        return null;
     }
 
 }

@@ -101,7 +101,7 @@ public class RobotMovement {
 
 
     //Robot drives a given distance
-    private void robotDrive(int distance_cm) {
+    public void robotDrive(int distance_cm) {
         comReadWrite(
                 new byte[] { 'k', adjustedMove(distance_cm), '\r', '\n' }
         );

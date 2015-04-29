@@ -74,7 +74,7 @@ public class HomographyActivity extends ActionBarActivity implements CameraBridg
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
 
         mOpenCvCameraView.setCvCameraViewListener(this);
-
+        mOpenCvCameraView.setMaxFrameSize(1920,1080);
 
     }
 
@@ -146,6 +146,7 @@ public class HomographyActivity extends ActionBarActivity implements CameraBridg
 
 
     public void onButtonHomography(View v){
+        mOpenCvCameraView.findFocus();
         if(homography.setHomographyMatrix(currentFrame)){
             Toast.makeText(getApplicationContext(), "Homography done!", Toast.LENGTH_SHORT).show();
         }else{
