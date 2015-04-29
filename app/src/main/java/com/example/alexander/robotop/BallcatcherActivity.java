@@ -41,6 +41,7 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
     private int degree = 5;
     private BallSearcher searcher = new BallSearcher();
     private int counter = 0;
+    private int counter2 = 0;
     private Bug0Alg bug = new Bug0Alg();
     //done
 
@@ -165,8 +166,9 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
     }
 
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
+        Mat mRgba = inputFrame.rgba();
+
         if (!locatedPosition) {
-            Mat mRgba = inputFrame.rgba();
             Mat redCircles = null;
             Mat greenCircles = null;
             Mat result = null;
@@ -186,11 +188,16 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
                 result = greenCircles;
             }else {
                 counter++;
-                if(counter > 5){
+                if(counter > 3){
                     counter = 0;
-                    lookForBall();
+                    move.robotTurn(45);
+                    counter2 +=45;
+                    if(counter2>360){
+                        counter2=0;
+                        lookForBall();
+                    }
                 }
-                return null;
+                return mRgba;
             }
             row = result.rows();
             elements = (int) result.elemSize();
@@ -205,7 +212,7 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
             }
             planDelta(data[0]);
         }
-        return null;
+        return mRgba;
     }
     //call planDelata after u entered the aim point
     public void planDelta(float a){

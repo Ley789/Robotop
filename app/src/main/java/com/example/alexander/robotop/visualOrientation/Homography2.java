@@ -1,7 +1,7 @@
 package com.example.alexander.robotop.visualOrientation;
 
 /**
- * Created by uli on 29.04.15.
+ * Alternative vom letzen Semester.
  */
 
 
