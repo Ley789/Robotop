@@ -14,10 +14,12 @@ import org.opencv.imgproc.Imgproc;
  * Created by Alexander on 28/04/2015.
  */
 public class Homography {
-    private Mat homography = new Mat();
+    private Mat homography = null;
     private static Homography instance = null;
 
-    private Homography(){}
+    private Homography(){
+
+    }
 
     public static synchronized Homography getInstance(){
         if(instance == null){
@@ -27,6 +29,7 @@ public class Homography {
     }
 
     public boolean setHomographyMatrix(Mat mRgba){
+        homography = new Mat();
         final Size mPatternSize = new Size(6, 9); // number of inner corners in the used chessboard pattern
         float x = -48.0f; // coordinates of first detected inner corner on chessboard
         float y = 309.0f;
