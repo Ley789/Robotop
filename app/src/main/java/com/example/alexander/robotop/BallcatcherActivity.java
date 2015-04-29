@@ -1,18 +1,7 @@
 package com.example.alexander.robotop;
 
-import android.support.v7.app.ActionBarActivity;
-import org.opencv.android.BaseLoaderCallback;
-import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
-import org.opencv.android.LoaderCallbackInterface;
-import org.opencv.android.OpenCVLoader;
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
-import org.opencv.core.Point;
-import org.opencv.core.Scalar;
-import org.opencv.core.Size;
-import org.opencv.android.CameraBridgeViewBase;
-import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +15,20 @@ import com.example.alexander.robotop.visualOrientation.DetectGreenBlobs;
 import com.example.alexander.robotop.visualOrientation.DetectRedBlobs;
 import com.example.alexander.robotop.visualOrientation.Homography;
 
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.CameraBridgeViewBase;
+import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
+import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -42,6 +45,7 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
     private boolean locatedPosition = false;
     private MenuItem mItemSwitchCamera = null;
     private Bug0Alg bug;
+    private List<MatOfPoint> pts = new ArrayList<>();
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -173,6 +177,13 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
 
             }
         }
-        return null;
+        Mat mRgba = inputFrame.rgba();
+        Mat newMat = new Mat(mRgba.rows(), mRgba.cols(), mRgba.type());
+        pts.add(new MatOfPoint(new Point(1,2)));
+        pts.add(new MatOfPoint(new Point(200,500)));
+        Core.polylines(newMat, pts, false, new Scalar(255, 0, 0));
+
+
+        return newMat;
     }
 }
