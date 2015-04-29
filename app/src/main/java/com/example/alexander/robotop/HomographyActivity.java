@@ -147,9 +147,9 @@ public class HomographyActivity extends ActionBarActivity implements CameraBridg
 
     public void onButtonHomography(View v){
         if(homography.setHomographyMatrix(currentFrame)){
-            Toast.makeText(getApplicationContext(), "Homography done!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Homography done!", Toast.LENGTH_SHORT).show();
         }else{
-            Toast.makeText(getApplicationContext(), "Homography FAILED!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Homography FAILED!", Toast.LENGTH_SHORT).show();
         }
     }
 }
