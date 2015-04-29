@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.example.alexander.robotop.ThreadControll.Executer;
 import com.example.alexander.robotop.bugAlgorithms.Bug0Alg;
+import com.example.alexander.robotop.datastruct.Point;
 import com.example.alexander.robotop.movement.BallSearcher;
 import com.example.alexander.robotop.movement.RobotMovement;
 import com.example.alexander.robotop.robotData.RobotTracker;
@@ -29,6 +30,8 @@ import org.opencv.core.Mat;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
+import static com.example.alexander.robotop.communication.Connection.comReadWrite;
+
 /**
  * Created by Alexander on 28/04/2015.
  */
@@ -39,6 +42,7 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
     private RobotMovement move = RobotMovement.getInstance();
     private int length = 20;
     private int degree = 5;
+private int searchDegree = 30;
     private BallSearcher searcher = new BallSearcher();
     private int counter = 0;
     private int counter2 = 0;
@@ -184,14 +188,16 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
             int elements = 0;
             if(redCircles != null) {
                  result = redCircles;
+                counter2=0;
             } else if (greenCircles != null) {
                 result = greenCircles;
+                counter2=0;
             }else {
                 counter++;
                 if(counter > 3){
                     counter = 0;
-                    move.robotTurn(45);
-                    counter2 +=45;
+                    move.robotTurn(searchDegree);
+                    counter2 +=searchDegree;
                     if(counter2>360){
                         counter2=0;
                         lookForBall();
@@ -206,9 +212,9 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
             result.get(0,0,data);
             //test the turns
             if(data[1] < 280){
-                move.robotTurn(degree);
-            }else if(data[1] > 480) {
                 move.robotTurn(-degree);
+            }else if(data[1] > 380) {
+                move.robotTurn(degree);
             }
             planDelta(data[0]);
         }
@@ -216,9 +222,15 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
     }
     //call planDelata after u entered the aim point
     public void planDelta(float a){
-        if(a > 650){
+        if(a > 600){
+
             catchBall = true;
-            locatedPosition = false;
+            locatedPosition = true;
+            comReadWrite(new byte[]{'o',(byte) 0, '\r', '\n'});
+            bug.bug0d(new com.example.alexander.robotop.datastruct.Point(100,100));
+            comReadWrite(new byte[]{'o', (byte) 255, '\r', '\n'});
+            move.robotDrive(-20);
+            bug.bug0d(new com.example.alexander.robotop.datastruct.Point(0,0));
         }else{
             move.robotDrive(10);
 
