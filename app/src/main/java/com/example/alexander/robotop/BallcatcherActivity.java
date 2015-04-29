@@ -185,7 +185,7 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
                 counter++;
                 if(counter > 5){
                     counter = 0;
-                    //searcher.run();
+                    //lookForBall();
                 }
                 return null;
             }
@@ -214,5 +214,7 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
 
         }
     }
+
+
 
 }
