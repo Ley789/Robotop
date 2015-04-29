@@ -23,7 +23,6 @@ import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 
@@ -88,10 +87,6 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
 
         homography = Homography.getInstance();
         bug = new Bug0Alg();
-
-        pts.add(new Point(1,2));
-        pts.add(new Point(200,500));
-        pts.add(new Point(100,100));
     }
 
     @Override
