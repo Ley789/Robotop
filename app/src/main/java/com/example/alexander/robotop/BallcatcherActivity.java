@@ -23,6 +23,7 @@ import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 
@@ -178,8 +179,8 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
         }
         Mat mRgba = inputFrame.rgba();
         Mat newMat = new Mat(mRgba.rows(), mRgba.cols(), mRgba.type());
-        pts.add(new Point(1,2));
-        pts.add(new Point(200,500));
+        pts.add(new MatOfPoint(new Point(1,2)));
+        pts.add(new MatOfPoint(new Point(200,500)));
         Core.line(mRgba, new Point(0,0), new Point(200,200), new Scalar(255, 0, 0));
 
 
