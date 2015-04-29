@@ -195,9 +195,9 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
             float[] data = new float[row * elements/4];
             result.get(0,0,data);
             //test the turns
-            if(data[1] < 300){
+            if(data[1] < 280){
                 move.robotTurn(degree);
-            }else if(data[1] > 450) {
+            }else if(data[1] > 480) {
                 move.robotTurn(-degree);
             }
             planDelta(data[0]);
@@ -211,6 +211,7 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
             locatedPosition = false;
         }else{
             move.robotDrive(10);
+
         }
     }
 
