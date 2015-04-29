@@ -1,7 +1,15 @@
 package com.example.alexander.robotop;
 
-import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.android.CameraBridgeViewBase;
+import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,24 +19,10 @@ import android.widget.Toast;
 
 import com.example.alexander.robotop.ThreadControll.Executer;
 import com.example.alexander.robotop.bugAlgorithms.Bug0Alg;
-import com.example.alexander.robotop.robotData.RobotTracker;
 import com.example.alexander.robotop.visualOrientation.DetectGreenBlobs;
 import com.example.alexander.robotop.visualOrientation.DetectRedBlobs;
 import com.example.alexander.robotop.visualOrientation.Homography;
 
-import org.opencv.android.BaseLoaderCallback;
-import org.opencv.android.CameraBridgeViewBase;
-import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
-import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
-import org.opencv.android.LoaderCallbackInterface;
-import org.opencv.android.OpenCVLoader;
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
-import org.opencv.core.Point;
-import org.opencv.core.Scalar;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -45,9 +39,6 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
     private boolean locatedPosition = false;
     private MenuItem mItemSwitchCamera = null;
     private Bug0Alg bug;
-    RobotTracker tracker;
-
-
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -90,8 +81,6 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
 
         homography = Homography.getInstance();
         bug = new Bug0Alg();
-        tracker = new RobotTracker();
-        new Thread(tracker).start();
     }
 
     @Override
@@ -106,12 +95,11 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
         super.onResume();
         OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_3, this, mLoaderCallback);
     }
-    @Override
+
     public void onDestroy() {
         super.onDestroy();
         if (mOpenCvCameraView != null)
             mOpenCvCameraView.disableView();
-        tracker.stop();
     }
 
     @Override
@@ -160,39 +148,36 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
             Mat mRgba = inputFrame.rgba();
             Mat redCircles = new Mat();
             Mat greenCircles = new Mat();
+            Mat result = new Mat();
             exe.execute(new DetectRedBlobs(mRgba));
             exe.execute(new DetectGreenBlobs(mRgba));
             try {
                 redCircles = exe.getResult();
                 greenCircles = exe.getResult();
             } catch (ExecutionException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
             } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
             }
-            if(redCircles != null){
-                //we only care for the first occurence
-                long elements = redCircles.elemSize();
-                float[] data;
-
-            //    homography.getPosition(new Point(redCircles.get(0,0),redCircles.get(0,1)));
-            }else if(greenCircles != null){
-
+            int row;
+            int elements;
+            if(redCircles.rows() > 0) {
+                row = redCircles.rows();
+                elements = (int) redCircles.elemSize();
+                result = redCircles;
+            } else if (greenCircles.rows() > 0) {
+                row = greenCircles.rows();
+                elements = (int) greenCircles.elemSize();
+                result = redCircles;
+            } else {
+              return  null;
             }
-        }
 
-        Mat mRgba = inputFrame.rgba();
-        Mat newMat = new Mat(mRgba.rows(), mRgba.cols(), mRgba.type());
-        int rows = (newMat.rows());
-        int cols = (newMat.cols());
-        Core.line(newMat, new Point( cols/2,0 ), new Point(cols/2,rows ), new Scalar(255, 255, 255));
-        Core.line(newMat, new Point(0, rows/2 ), new Point(cols,rows/2), new Scalar(255, 255, 255));
-        for(int i = 0; i< tracker.getTrack().size()-1; i++) {
-            Core.line(newMat, tracker.getTrack().get(i), tracker.getTrack().get(i+1), new Scalar(255, 0, 0));
+            //we only care for the first occurence
+            float[] data = new float[row * elements/4];
+            result.get(0,0,data);
+            Point goal = homography.getPosition(new Point(data[0],data[1]));
+            bug.bug0d(new com.example.alexander.robotop.datastruct.Point((int) goal.x, (int) goal.y));
+            locatedPosition = true;
         }
-
-        return newMat;
+        return null;
     }
 }
