@@ -185,6 +185,7 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
             Log.d(TAG, "x " + goal.x +"  y " + goal.y);
             //bug.forcedBug0(new com.example.alexander.robotop.datastruct.Point((int) goal.x, (int) goal.y));
             //locatedPosition = true;
+
         }
         return null;
     }
