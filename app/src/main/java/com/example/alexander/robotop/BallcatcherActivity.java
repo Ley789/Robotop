@@ -183,8 +183,10 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
         }
         Mat mRgba = inputFrame.rgba();
         Mat newMat = new Mat(mRgba.rows(), mRgba.cols(), mRgba.type());
-
-
+        int rows = (newMat.rows());
+        int cols = (newMat.cols());
+        Core.line(newMat, new Point( cols/2,0 ), new Point(cols/2,rows ), new Scalar(255, 255, 255));
+        Core.line(newMat, new Point(0, rows/2 ), new Point(cols,rows/2), new Scalar(255, 255, 255));
         for(int i = 0; i< pts.size()-1; i++) {
             Core.line(newMat, pts.get(i), pts.get(i+1), new Scalar(255, 0, 0));
         }
