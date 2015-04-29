@@ -192,6 +192,7 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
         for(int i = 0; i< tracker.getTrack().size()-1; i++) {
             Core.line(newMat, tracker.getTrack().get(i), tracker.getTrack().get(i+1), new Scalar(255, 0, 0));
         }
+        Core.circle(newMat, tracker.getTrack().get(tracker.getTrack().size()-1), 9, new Scalar(0, 255, 0));
 
         return newMat;
     }
