@@ -31,7 +31,7 @@ public class HomographyActivity extends ActionBarActivity implements CameraBridg
 
     private Executer<Mat> exe = new Executer<Mat>();
     private CameraBridgeViewBase mOpenCvCameraView;
-    private boolean              mIsJavaCamera = false;
+    private boolean              mIsJavaCamera = true;
     private MenuItem             mItemSwitchCamera = null;
 
 

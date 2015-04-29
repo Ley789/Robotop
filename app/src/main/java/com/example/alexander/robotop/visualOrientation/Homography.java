@@ -1,6 +1,4 @@
 package com.example.alexander.robotop.visualOrientation;
-import java.util.LinkedList;
-
 import org.opencv.calib3d.Calib3d;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
@@ -9,6 +7,8 @@ import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
+
+import java.util.LinkedList;
 
 /**
  * Created by Alexander on 28/04/2015.
@@ -56,7 +56,7 @@ public class Homography {
 
         // Calculate homography:
         if (mPatternWasFound){
-            // Calib3d.drawChessboardCorners(mRgba, mPatternSize, mCorners, mPatternWasFound); //for visualization
+            Calib3d.drawChessboardCorners(mRgba, mPatternSize, mCorners, mPatternWasFound); //for visualization
             homography =  Calib3d.findHomography(mCorners, RealWorldC);
             return true;
         }else{

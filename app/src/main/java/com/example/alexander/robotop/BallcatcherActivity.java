@@ -1,15 +1,7 @@
 package com.example.alexander.robotop;
 
-import android.support.v7.app.ActionBarActivity;
-import org.opencv.android.BaseLoaderCallback;
-import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
-import org.opencv.android.LoaderCallbackInterface;
-import org.opencv.android.OpenCVLoader;
-import org.opencv.core.Mat;
-import org.opencv.core.Point;
-import org.opencv.android.CameraBridgeViewBase;
-import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.example.alexander.robotop.ThreadControll.Executer;
+import com.example.alexander.robotop.bugAlgorithms.Bug0Alg;
 import com.example.alexander.robotop.movement.BallSearcher;
 import com.example.alexander.robotop.movement.RobotMovement;
 import com.example.alexander.robotop.robotData.RobotTracker;
@@ -25,6 +18,15 @@ import com.example.alexander.robotop.visualOrientation.DetectGreenBlobs;
 import com.example.alexander.robotop.visualOrientation.DetectRedBlobs;
 import com.example.alexander.robotop.visualOrientation.Homography;
 
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.CameraBridgeViewBase;
+import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
+import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Mat;
+
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -39,6 +41,7 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
     private int degree = 5;
     private BallSearcher searcher = new BallSearcher();
     private int counter = 0;
+    private Bug0Alg bug = new Bug0Alg();
     //done
 
     private static final String TAG = "Coord";
@@ -185,7 +188,7 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
                 counter++;
                 if(counter > 5){
                     counter = 0;
-                    //lookForBall();
+                    lookForBall();
                 }
                 return null;
             }
@@ -213,6 +216,15 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
             move.robotDrive(10);
 
         }
+    }
+
+    public void lookForBall() {
+        int min = -100 ;
+        int max = 100;
+        Random rand = new Random();
+        int randomX= rand.nextInt((max - min) + 1) + min;
+        int randomY= rand.nextInt((max - min) + 1) + min;
+        bug.forcedBug0(new com.example.alexander.robotop.datastruct.Point(randomX, randomY));
     }
 
 
