@@ -78,6 +78,7 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
             mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.java_surface_view);
         else
             mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.native_surface_view);
+        mOpenCvCameraView.setMaxFrameSize(1920, 1080);
 
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
 
