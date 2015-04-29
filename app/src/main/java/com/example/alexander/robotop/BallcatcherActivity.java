@@ -181,7 +181,7 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
         Mat newMat = new Mat(mRgba.rows(), mRgba.cols(), mRgba.type());
         pts.add(new MatOfPoint(new Point(1,2)));
         pts.add(new MatOfPoint(new Point(200,500)));
-        Core.polylines(mRgba, pts, false, new Scalar(255, 0, 0));
+        Core.polylines(mRgba, pts, false, new Scalar(255, 0, 0),10);
 
 
         return mRgba;
