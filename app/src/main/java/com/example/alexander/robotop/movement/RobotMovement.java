@@ -97,7 +97,31 @@ public class RobotMovement {
         }
         return restDistanceToDrive;
     }
-
+    public int robotMoveBlindForward(int distance_cm_input){
+        if(distance_cm_input==0){
+            return 0;
+        }
+        int distance_cm=distance_cm_input;
+        double si =Math.signum(distance_cm_input);
+        if (si<0){
+            robotTurn(180);
+            distance_cm=distance_cm*(-1);
+        }
+        int restDistanceToDrive = distance_cm;
+        int steps = distance_cm / maxDrive;
+        int difference = distance_cm - (steps * maxDrive);
+            do{
+                if(steps == 0){
+                    robotDrive(difference);
+                    restDistanceToDrive -= difference;
+                }else{
+                    robotDrive(maxDrive);
+                    restDistanceToDrive -= maxDrive;
+                }
+                steps--;
+            }while(steps >= 0);
+        return restDistanceToDrive;
+    }
 
 
 
@@ -224,7 +248,7 @@ public class RobotMovement {
         RobotOdometry odometry = RobotOdometry.getInstance();
         Point currentPosition = odometry.getPoint();
         robotTurn(currentPosition.degreeToPoint(goal)-odometry.getAngle());
-        robotDrive(currentPosition.distance(goal));
+        robotMoveBlindForward(currentPosition.distance(goal));
 
 
     }
