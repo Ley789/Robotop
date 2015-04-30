@@ -15,9 +15,15 @@ public class RobotTracker implements Runnable {
 
     @Override
     public void run() {
+        track.add(new Point(0,0));
+        int x = 0;
+        int y = 0;
         while(running) {
-            int x = odometry.getX();
-            int y = odometry.getY();
+            int cnt = 5;
+            x = x + cnt;
+            y = y + cnt;
+            //int x = odometry.getX();
+            //int y = odometry.getY();
             Point pt = new Point(x, y);
             track.add(pt);
             try {
