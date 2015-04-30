@@ -256,14 +256,22 @@ private int searchDegree = 30;
         Core.line(newMat, new Point(cols / 2, 0), new Point(cols / 2, rows), new Scalar(255, 255, 255));
         Core.line(newMat, new Point(0, rows/2 ), new Point(cols,rows/2), new Scalar(255, 255, 255));
         for(int i = 0; i< tracker.getTrack().size()-1; i++) {
-            Core.line(newMat, tracker.getTrack().get(i), tracker.getTrack().get(i+1), new Scalar(255, 0, 0));
+            Core.line(newMat, adjustPoint(tracker.getTrack().get(i), rows, cols), adjustPoint(tracker.getTrack().get(i+1), rows, cols), new Scalar(255, 0, 0));
         }
-        Core.circle(newMat, tracker.getTrack().get(tracker.getTrack().size()-1), 9, new Scalar(0, 255, 0));
+       // Core.circle(newMat, tracker.getTrack().get(tracker.getTrack().size()-1), 9, new Scalar(0, 255, 0));
 
         return newMat;
 
     }
 
 
+    private Point adjustPoint(Point p, int rows, int cols){
+        double pX;
+        double pY;
+        pX = (-1*p.x)+ cols/2;
+        pY=(-1* p.y)+ rows/2;
+        return new Point(pX, pY);
+
+    }
 
 }
