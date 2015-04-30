@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.alexander.robotop.ThreadControll.Executer;
-import com.example.alexander.robotop.visualOrientation.Homography;
+import com.example.alexander.robotop.visualOrientation.Homography2;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -25,7 +25,7 @@ public class HomographyActivity extends ActionBarActivity implements CameraBridg
 
     private Button btnHomography;
     private Mat currentFrame;
-    private Homography homography;
+    private Homography2 homography;
 
     private static final String TAG = "OCVSample::Activity";
 
@@ -61,7 +61,6 @@ public class HomographyActivity extends ActionBarActivity implements CameraBridg
         Log.i(TAG, "called onCreate");
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        homography = Homography.getInstance();
 
         setContentView(R.layout.activity_homography);
         btnHomography = (Button)findViewById(R.id.btn_homography);
@@ -147,7 +146,8 @@ public class HomographyActivity extends ActionBarActivity implements CameraBridg
 
     public void onButtonHomography(View v){
         mOpenCvCameraView.findFocus();
-        if(homography.setHomographyMatrix(currentFrame)){
+        homography = new Homography2(currentFrame);
+        if(homography != null){
             Toast.makeText(getApplicationContext(), "Homography done!", Toast.LENGTH_SHORT).show();
         }else{
             Toast.makeText(getApplicationContext(), "Homography FAILED!", Toast.LENGTH_SHORT).show();
