@@ -4,6 +4,7 @@ package com.example.alexander.robotop.movement;
 import android.util.Log;
 
 import com.example.alexander.robotop.communication.Data;
+import com.example.alexander.robotop.datastruct.Point;
 import com.example.alexander.robotop.modell.NoSpaceToMoveException;
 import com.example.alexander.robotop.robotData.RobotOdometry;
 
@@ -218,4 +219,13 @@ public class RobotMovement {
         return false;
     }
 
+
+    public void moveBlind(Point goal){
+        RobotOdometry odometry = RobotOdometry.getInstance();
+        Point currentPosition = odometry.getPoint();
+        robotTurn(currentPosition.degreeToPoint(goal)-odometry.getAngle());
+        robotDrive(currentPosition.distance(goal));
+
+
+    }
 }
