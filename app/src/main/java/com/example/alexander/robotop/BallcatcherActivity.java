@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.example.alexander.robotop.ThreadControll.Executer;
 import com.example.alexander.robotop.bugAlgorithms.Bug0Alg;
-import com.example.alexander.robotop.datastruct.Point;
+
 import com.example.alexander.robotop.movement.BallSearcher;
 import com.example.alexander.robotop.movement.RobotMovement;
 import com.example.alexander.robotop.robotData.RobotTracker;
@@ -25,7 +25,10 @@ import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
 
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
@@ -203,7 +206,7 @@ private int searchDegree = 30;
                         lookForBall();
                     }
                 }
-                return mRgba;
+                return trackWay(mRgba);
             }
             row = result.rows();
             elements = (int) result.elemSize();
@@ -218,7 +221,7 @@ private int searchDegree = 30;
             }
             planDelta(data[0]);
         }
-        return mRgba;
+        return trackWay(mRgba);
     }
     //call planDelata after u entered the aim point
     public void planDelta(float a){
@@ -244,6 +247,21 @@ private int searchDegree = 30;
         int randomX= rand.nextInt((max - min) + 1) + min;
         int randomY= rand.nextInt((max - min) + 1) + min;
         bug.forcedBug0(new com.example.alexander.robotop.datastruct.Point(randomX, randomY));
+    }
+
+    public Mat trackWay(Mat mRgba){
+        Mat newMat = new Mat(mRgba.rows(), mRgba.cols(), mRgba.type());
+        int rows = (newMat.rows());
+        int cols = (newMat.cols());
+        Core.line(newMat, new Point(cols / 2, 0), new Point(cols / 2, rows), new Scalar(255, 255, 255));
+        Core.line(newMat, new Point(0, rows/2 ), new Point(cols,rows/2), new Scalar(255, 255, 255));
+        for(int i = 0; i< tracker.getTrack().size()-1; i++) {
+            Core.line(newMat, tracker.getTrack().get(i), tracker.getTrack().get(i+1), new Scalar(255, 0, 0));
+        }
+        Core.circle(newMat, tracker.getTrack().get(tracker.getTrack().size()-1), 9, new Scalar(0, 255, 0));
+
+        return newMat;
+
     }
 
 
