@@ -1,12 +1,16 @@
 package com.example.alexander.robotop;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceView;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.alexander.robotop.ThreadControll.Executer;
@@ -41,14 +45,19 @@ import static com.example.alexander.robotop.communication.Connection.comReadWrit
 public class BallcatcherActivity extends ActionBarActivity  implements CvCameraViewListener2 {
 
     //Variables for plan delta
+    private boolean start = false;
     private boolean catchBall =false;
     private RobotMovement move = RobotMovement.getInstance();
     private int length = 20;
     private int degree = 5;
-private int searchDegree = 30;
+    private int searchDegree = 30;
     private BallSearcher searcher = new BallSearcher();
     private int counter = 0;
     private int counter2 = 0;
+    private int aimX;
+    private int aimY;
+    private EditText editY;
+    private EditText editX;
 
     //done
 
@@ -61,6 +70,8 @@ private int searchDegree = 30;
     private boolean locatedPosition = false;
     private MenuItem mItemSwitchCamera = null;
     RobotTracker tracker;
+    private Dialog dialog;
+    private Button setXYBtn;
 
     private com.example.alexander.robotop.datastruct.Point toPoint;
 
@@ -90,6 +101,21 @@ private int searchDegree = 30;
     public void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "called onCreate");
         super.onCreate(savedInstanceState);
+        dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_xy_input);
+        editX = (EditText) dialog.findViewById(R.id.edit_x);
+        editY = (EditText) dialog.findViewById(R.id.editY);
+        setXYBtn = (Button) dialog.findViewById(R.id.btn_setXY);
+        setXYBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                aimX = Integer.parseInt(editX.getText().toString());
+                aimY = Integer.parseInt(editX.getText().toString());
+                dialog.dismiss();
+                start = true;
+            }
+        });
+        dialog.show();
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -109,6 +135,7 @@ private int searchDegree = 30;
 
         tracker = new RobotTracker();
         new Thread(tracker).start();
+
     }
 
     @Override
@@ -174,65 +201,68 @@ private int searchDegree = 30;
 
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
         Mat mRgba = inputFrame.rgba();
-
-        if (!locatedPosition) {
-            Mat redCircles = null;
-            Mat greenCircles = null;
-            Mat result = null;
-            exe.execute(new DetectRedBlobs(mRgba));
-            exe.execute(new DetectGreenBlobs(mRgba));
-            try {
-                redCircles = exe.getResult();
-                greenCircles = exe.getResult();
-            } catch (ExecutionException e) {
-            } catch (Exception e) {
-            }
-            int row = 0;
-            int elements = 0;
-            if(redCircles != null) {
-                 result = redCircles;
-                counter2=0;
-            } else if (greenCircles != null) {
-                result = greenCircles;
-                counter2=0;
-            }else {
-                counter++;
-                if(counter > 3){
-                    counter = 0;
-                    move.robotTurn(searchDegree);
-                    counter2 +=searchDegree;
-                    if(counter2>360){
-                        counter2=0;
-                        lookForBall();
-                    }
+        if(start) {
+            if (!locatedPosition) {
+                Mat redCircles = null;
+                Mat greenCircles = null;
+                Mat result = null;
+                //       exe.execute(new DetectRedBlobs(mRgba));
+                exe.execute(new DetectGreenBlobs(mRgba));
+                try {
+                    //        redCircles = exe.getResult();
+                    greenCircles = exe.getResult();
+                } catch (ExecutionException e) {
+                } catch (Exception e) {
                 }
-                return trackWay(mRgba);
+                int row = 0;
+                int elements = 0;
+                if (redCircles != null) {
+                    result = redCircles;
+                    counter2 = 0;
+                } else if (greenCircles != null) {
+                    result = greenCircles;
+                    counter2 = 0;
+                } else {
+                    counter++;
+                    if (counter > 3) {
+                        counter = 0;
+                        move.robotTurn(searchDegree);
+                        counter2 += searchDegree;
+                        if (counter2 > 360) {
+                            counter2 = 0;
+                            lookForBall();
+                        }
+                    }
+                    return trackWay(mRgba);
+                }
+                row = result.rows();
+                elements = (int) result.elemSize();
+                //we only care for the first occurence
+                float[] data = new float[row * elements / 4];
+                result.get(0, 0, data);
+                //test the turns
+                if (data[1] < 250) {
+                    move.robotTurn(-degree);
+                } else if (data[1] > 350) {
+                    move.robotTurn(degree);
+                }
+                planDelta(data[0]);
             }
-            row = result.rows();
-            elements = (int) result.elemSize();
-            //we only care for the first occurence
-            float[] data = new float[row * elements/4];
-            result.get(0,0,data);
-            //test the turns
-            if(data[1] < 280){
-                move.robotTurn(-degree);
-            }else if(data[1] > 380) {
-                move.robotTurn(degree);
-            }
-            planDelta(data[0]);
+            return trackWay(mRgba);
+        }else{
+            return mRgba;
         }
-        return trackWay(mRgba);
     }
     //call planDelata after u entered the aim point
     public void planDelta(float a){
-        if(a > 600){
-
+        if(a > 650){
             catchBall = true;
             locatedPosition = true;
             comReadWrite(new byte[]{'o',(byte) 0, '\r', '\n'});
-            move.moveBlind(new com.example.alexander.robotop.datastruct.Point(100,100));
+            move.moveBlind(new com.example.alexander.robotop.datastruct.Point(aimX, aimY));
             comReadWrite(new byte[]{'o', (byte) 255, '\r', '\n'});
             move.robotDrive(-20);
+            searcher.avoidBall();
             move.moveBlind(new com.example.alexander.robotop.datastruct.Point(0,0));
         }else{
             move.robotDrive(10);
@@ -258,7 +288,7 @@ private int searchDegree = 30;
         for(int i = 0; i< tracker.getTrack().size()-1; i++) {
             Core.line(newMat, adjustPoint(tracker.getTrack().get(i), rows, cols), adjustPoint(tracker.getTrack().get(i+1), rows, cols), new Scalar(255, 0, 0));
         }
-       // Core.circle(newMat, tracker.getTrack().get(tracker.getTrack().size()-1), 9, new Scalar(0, 255, 0));
+        // Core.circle(newMat, tracker.getTrack().get(tracker.getTrack().size()-1), 9, new Scalar(0, 255, 0));
 
         return newMat;
 
@@ -274,6 +304,7 @@ private int searchDegree = 30;
         return new Point(pX, pY);
 
     }
+
 
 }
 

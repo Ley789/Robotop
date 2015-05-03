@@ -18,7 +18,9 @@ public class RobotTracker implements Runnable {
         while(running) {
             int x = odometry.getX();
             int y = odometry.getY();
-            Point pt = new Point(x, y);
+            Point pt = new Point();
+            pt.x = x;
+            pt.y = y;
             track.add(pt);
             try {
                 Thread.sleep(1000);
