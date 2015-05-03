@@ -265,6 +265,7 @@ private int searchDegree = 30;
     }
 
 
+
     private Point adjustPoint(Point p, int rows, int cols){
         double pX;
         double pY;
