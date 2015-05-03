@@ -230,10 +230,10 @@ private int searchDegree = 30;
             catchBall = true;
             locatedPosition = true;
             comReadWrite(new byte[]{'o',(byte) 0, '\r', '\n'});
-            move.moveBlind(new com.example.alexander.robotop.datastruct.Point(100,100));
+            bug.bug0d(new com.example.alexander.robotop.datastruct.Point(100,100));
             comReadWrite(new byte[]{'o', (byte) 255, '\r', '\n'});
             move.robotDrive(-20);
-            move.moveBlind(new com.example.alexander.robotop.datastruct.Point(0,0));
+            bug.bug0d(new com.example.alexander.robotop.datastruct.Point(0,0));
         }else{
             move.robotDrive(10);
 
@@ -246,7 +246,7 @@ private int searchDegree = 30;
         Random rand = new Random();
         int randomX= rand.nextInt((max - min) + 1) + min;
         int randomY= rand.nextInt((max - min) + 1) + min;
-        move.moveBlind(new com.example.alexander.robotop.datastruct.Point(randomX, randomY));
+        bug.bug0d(new com.example.alexander.robotop.datastruct.Point(randomX, randomY));
     }
 
     public Mat trackWay(Mat mRgba){

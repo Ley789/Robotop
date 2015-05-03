@@ -6,20 +6,20 @@ package com.example.alexander.robotop.visualOrientation;
 
 
 
-    import java.util.ArrayList;
-    import java.util.List;
-
-    import org.opencv.calib3d.Calib3d;
-    import org.opencv.core.Core;
-    import org.opencv.core.CvType;
-    import org.opencv.core.Mat;
-    import org.opencv.core.MatOfPoint2f;
-    import org.opencv.core.Point;
-    import org.opencv.core.Range;
-    import org.opencv.core.Size;
-    import org.opencv.imgproc.Imgproc;
-
     import android.util.Log;
+
+import org.opencv.calib3d.Calib3d;
+import org.opencv.core.Core;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint2f;
+import org.opencv.core.Point;
+import org.opencv.core.Range;
+import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
+
+import java.util.ArrayList;
+import java.util.List;
 
     public class Homography2 extends Mat {
         private static final String TAG = "Homography";
@@ -82,7 +82,7 @@ package com.example.alexander.robotop.visualOrientation;
                 Log.i(TAG, "homography Found");
                 return homography;
             }
-            return new Mat();
+            return null;
 
         }
 
