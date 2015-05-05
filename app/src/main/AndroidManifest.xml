@@ -56,6 +56,13 @@
             android:label="@string/title_activity_homography"
             android:screenOrientation="landscape">
         </activity>
+        <activity
+            android:name=".SearchActivity"
+            android:label="title_activity_search"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation">
+
+        </activity>
     </application>
 
 </manifest>
