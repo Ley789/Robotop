@@ -143,16 +143,14 @@ public class HomographyActivity extends ActionBarActivity implements CameraBridg
         Mat mRgba = inputFrame.rgba();
         if(testHom) {
             if(homography.setHomographyMatrix(mRgba)){
-                //Toast.makeText(this, "Got Homography!", Toast.LENGTH_SHORT);
-                Log.d("versuch1", "got Homography");
+                Toast.makeText(this, "Got Homography!", Toast.LENGTH_SHORT);
+                //Log.d("versuch1", "got Homography");
                 testHom=false;
             }
             Log.d("versuche0", "homography");
             }else {
             Log.d("versuche1", "nohomography");
         }
-
-
         return mRgba;
     }
 
