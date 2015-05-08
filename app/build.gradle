@@ -24,4 +24,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.0.0'
     compile project(':fTDriver')
     compile project(':openCVLibrary2410')
+    compile 'org.apache.commons:commons-math3:3.0'
 }
