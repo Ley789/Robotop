@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
@@ -30,9 +31,12 @@ import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
+import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
 
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
@@ -58,8 +62,13 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
     private int aimY;
     private EditText editY;
     private EditText editX;
-
     //done
+    //Var for beacon recognizing
+    private Mat mRgba;
+    private Scalar               mBlobColorRgba;
+    private Scalar               mBlobColorHsv;
+
+
 
     private static final String TAG = "Coord";
 
@@ -110,11 +119,12 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
             @Override
             public void onClick(View v) {
                 aimX = Integer.parseInt(editX.getText().toString());
-                aimY = Integer.parseInt(editX.getText().toString());
+                aimY = Integer.parseInt(editY.getText().toString());
                 dialog.dismiss();
                 start = true;
             }
         });
+
         dialog.show();
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -125,7 +135,6 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
             mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.java_surface_view);
         else
             mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.native_surface_view);
-        mOpenCvCameraView.setMaxFrameSize(1920, 1080);
 
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
 
@@ -200,17 +209,18 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
     }
 
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
-        Mat mRgba = inputFrame.rgba();
+        mRgba = inputFrame.rgba();
+
         if(start) {
             if (!locatedPosition) {
                 Mat redCircles = null;
                 Mat greenCircles = null;
                 Mat result = null;
-                //       exe.execute(new DetectRedBlobs(mRgba));
-                exe.execute(new DetectGreenBlobs(mRgba));
+                exe.execute(new DetectRedBlobs(mRgba));
+                //exe.execute(new DetectGreenBlobs(mRgba));
                 try {
-                    //        redCircles = exe.getResult();
-                    greenCircles = exe.getResult();
+                    redCircles = exe.getResult();
+                    //greenCircles = exe.getResult();
                 } catch (ExecutionException e) {
                 } catch (Exception e) {
                 }
@@ -234,6 +244,7 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
                         }
                     }
                     return trackWay(mRgba);
+
                 }
                 row = result.rows();
                 elements = (int) result.elemSize();
@@ -249,13 +260,14 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
                 planDelta(data[0]);
             }
             return trackWay(mRgba);
+
         }else{
             return mRgba;
         }
     }
     //call planDelata after u entered the aim point
     public void planDelta(float a){
-        if(a > 650){
+        if(a > 700){
             catchBall = true;
             locatedPosition = true;
             comReadWrite(new byte[]{'o',(byte) 0, '\r', '\n'});
@@ -299,11 +311,12 @@ public class BallcatcherActivity extends ActionBarActivity  implements CvCameraV
     private Point adjustPoint(Point p, int rows, int cols){
         double pX;
         double pY;
-        pX = (-1*p.x)+ cols/2;
-        pY=(-1* p.y)+ rows/2;
+        pX = (p.x)+ cols/2;
+        pY=(-1 * p.y)+ rows/2;
         return new Point(pX, pY);
 
     }
+
 
 
 }

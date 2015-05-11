@@ -247,7 +247,7 @@ public class RobotMovement {
     public void moveBlind(Point goal){
         RobotOdometry odometry = RobotOdometry.getInstance();
         Point currentPosition = odometry.getPoint();
-        robotTurn(currentPosition.degreeToPoint(goal)-odometry.getAngle());
+        robotTurn(currentPosition.degreeToPoint(goal) - odometry.getAngle());
         robotMoveBlindForward(currentPosition.distance(goal));
 
 

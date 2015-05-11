@@ -73,4 +73,14 @@ public class BugAlgorithmActivity extends ActionBarActivity {
         goal = new Point(x,y);
 
     }
+
+    /**
+     * Created by Alexander on 11/05/2015.
+     */
+    public static class BeaconActivity {
+
+
+
+
+    }
 }
