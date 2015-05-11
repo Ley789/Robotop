@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import com.example.alexander.robotop.ThreadControll.Executer;
 import com.example.alexander.robotop.visualOrientation.Homography;
-import com.example.alexander.robotop.visualOrientation.Homography2;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -143,8 +142,8 @@ public class HomographyActivity extends ActionBarActivity implements CameraBridg
         Mat mRgba = inputFrame.rgba();
         if(testHom) {
             if(homography.setHomographyMatrix(mRgba)){
-                Toast.makeText(this, "Got Homography!", Toast.LENGTH_SHORT);
-                //Log.d("versuch1", "got Homography");
+                //Toast.makeText(this, "Got Homography!", Toast.LENGTH_SHORT);
+                Log.d("versuch1", "got Homography");
                 testHom=false;
             }
             Log.d("versuche0", "homography");

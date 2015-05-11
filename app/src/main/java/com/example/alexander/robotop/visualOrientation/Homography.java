@@ -82,7 +82,7 @@ public class Homography {
      * @param relativeBallPosition the position of the ball in the robots coordinate system
      * @return the translated point
      */
-    private static com.example.alexander.robotop.datastruct.Point transpose(com.example.alexander.robotop.datastruct.Point relativeBallPosition, com.example.alexander.robotop.datastruct.Point roboPosition){
+    private static com.example.alexander.robotop.datastruct.Point translate(com.example.alexander.robotop.datastruct.Point relativeBallPosition, com.example.alexander.robotop.datastruct.Point roboPosition){
         int x = relativeBallPosition.getX();
         int y = relativeBallPosition.getY();
         int transX = roboPosition.getX();
@@ -130,7 +130,7 @@ public class Homography {
      */
     public static com.example.alexander.robotop.datastruct.Point toWorldCoordinates(com.example.alexander.robotop.datastruct.Point relativeBallPosition, int angle, com.example.alexander.robotop.datastruct.Point roboPosition){
         com.example.alexander.robotop.datastruct.Point rotation = rotate(relativeBallPosition,angle);
-        com.example.alexander.robotop.datastruct.Point ret = transpose(rotation, roboPosition);
+        com.example.alexander.robotop.datastruct.Point ret = translate(rotation, roboPosition);
         return ret;
     }
 

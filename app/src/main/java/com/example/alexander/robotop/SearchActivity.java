@@ -1,22 +1,17 @@
 package com.example.alexander.robotop;
 
-import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceView;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.alexander.robotop.ThreadControll.Executer;
-import com.example.alexander.robotop.robotData.RobotTracker;
+import com.example.alexander.robotop.robotData.RobotOdometry;
 import com.example.alexander.robotop.visualOrientation.DetectBlueBlobs;
-import com.example.alexander.robotop.visualOrientation.DetectGreenBlobs;
 import com.example.alexander.robotop.visualOrientation.Homography;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -34,6 +29,7 @@ import java.util.concurrent.ExecutionException;
 public class SearchActivity extends ActionBarActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
 
     private CameraBridgeViewBase mOpenCvCameraView;
+    private RobotOdometry odometry = RobotOdometry.getInstance();
     private Homography homography;
     private Executer<Mat> exe = new Executer<Mat>();
     private boolean mIsJavaCamera = true;
@@ -172,7 +168,9 @@ public class SearchActivity extends ActionBarActivity implements CameraBridgeVie
             result.get(0, 0, data);
             //test the turns
             Point p = homography.getPosition(new Point(data[0], data[1])); //CHECK X AND Y;
-            Log.d("BallPos", p.x + "  " + p.y);
+            com.example.alexander.robotop.datastruct.Point wc = homography.toWorldCoordinates(new com.example.alexander.robotop.datastruct.Point((int)p.x,(int)p.y),odometry.getAngle(), odometry.getPoint());
+            Log.d("BallPos: ", p.x + "  " + p.y);
+            Log.d("WorldCoords: ", wc.getX() + "  " + wc.getY());
         }
 
 
