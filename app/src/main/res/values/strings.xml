@@ -11,5 +11,5 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_ballcatcher">BallcatcherActivity</string>
     <string name="title_activity_homography">HomographyActivity</string>
-
+    <string name="title_activity_beacon">BeaconActivity</string>
 </resources>

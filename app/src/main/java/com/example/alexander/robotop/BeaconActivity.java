@@ -46,6 +46,11 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
     private CameraBridgeViewBase mOpenCvCameraView;
     private boolean mIsJavaCamera = true;
     private MenuItem mItemSwitchCamera = null;
+    private MenuItem mItemSaveColor = null;
+    private MenuItem mItemSaveBeacon = null;
+    private MenuItem mItemResetColor = null;
+    private MenuItem mItemResetBeacon = null;
+    private MenuItem mItemToggleVision = null;
     private static String TAG ="Test Beacon";
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
@@ -55,6 +60,7 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
                 case LoaderCallbackInterface.SUCCESS: {
                     Log.i(TAG, "OpenCV loaded successfully");
                     mOpenCvCameraView.enableView();
+                    mOpenCvCameraView.setOnTouchListener(BeaconActivity.this);
                 }
                 break;
                 default: {
@@ -72,11 +78,13 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "called onCreate");
+
         super.onCreate(savedInstanceState);
+
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        setContentView(R.layout.activity_ballcatcher);
+        setContentView(R.layout.activity_beacon);
 
         if (mIsJavaCamera)
             mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.java_surface_view);
@@ -114,6 +122,11 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
     public boolean onCreateOptionsMenu(Menu menu) {
         Log.i(TAG, "called onCreateOptionsMenu");
         mItemSwitchCamera = menu.add("Toggle Native/Java camera");
+        mItemSaveColor = menu.add("Save selected color");
+        mItemSaveBeacon = menu.add("Create new beacon object");
+        mItemResetColor = menu.add("Reset selected color");
+        mItemResetBeacon = menu.add("Reset beacons");
+        mItemToggleVision = menu.add("Toggle vision");
         return true;
     }
 
@@ -139,6 +152,17 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
             mOpenCvCameraView.enableView();
             Toast toast = Toast.makeText(this, toastMesage, Toast.LENGTH_LONG);
             toast.show();
+        }else if(item == mItemSaveColor){
+            saveColor();
+        }else if(item == mItemSaveBeacon){
+            //make point as input
+            addNewBeacon(new Point(0,0));
+        }else if(item == mItemResetColor){
+            resetColorList();
+        }else if(item == mItemResetBeacon){
+            resetBeacons();
+        }else if(item == mItemToggleVision){
+            toggleVision();
         }
 
         return true;
@@ -163,6 +187,8 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+        Log.i(TAG, "called onTouch");
+
         int cols = mRgba.cols();
         int rows = mRgba.rows();
 
@@ -216,8 +242,6 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
     }
 
 
-
-
     private void addNewBeacon(Point p){
         beacons.add(new Beacon(p,colorList));
         colorList.clear();
@@ -233,7 +257,7 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
             colorList.add(tmpColor);
         }
     }
-    private void toggleVison(){
+    private void toggleVision(){
         showTouchedColor = !showTouchedColor;
     }
 }

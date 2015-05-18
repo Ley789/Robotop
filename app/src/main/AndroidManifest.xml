@@ -56,6 +56,12 @@
             android:label="@string/title_activity_homography"
             android:screenOrientation="landscape">
         </activity>
+        <activity
+            android:name=".BeaconActivity"
+            android:label="@string/title_activity_beacon"
+            android:screenOrientation="landscape">
+        </activity>
     </application>
+
 
 </manifest>

@@ -74,6 +74,12 @@ public class MainActivity extends ActionBarActivity {
         startActivity(i);
     }
 
+    public void onButtonBeacon(View view){
+        Intent i = new Intent(this,BeaconActivity.class);
+        startActivity(i);
+    }
+
+
     public void connect() {
 
         // TODO implement permission request
