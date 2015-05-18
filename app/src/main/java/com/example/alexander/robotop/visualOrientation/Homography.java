@@ -1,4 +1,7 @@
 package com.example.alexander.robotop.visualOrientation;
+
+import org.apache.commons.math3.linear.Array2DRowRealMatrix;
+import org.apache.commons.math3.linear.RealMatrix;
 import org.opencv.calib3d.Calib3d;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
@@ -71,6 +74,64 @@ public class Homography {
         Core.perspectiveTransform(src, dest, homography); //homography is your homography matrix
         //we get points in millimeter, to convert them to cm we divide by 10
         return new Point(dest.get(0, 0)[0] / 10 , dest.get(0, 0)[1] / 10);
+    }
+
+    /**
+     * calculates the translation matrix and returns the translated point
+     * @param roboPosition the postion of the roboter which delivers the odomtry
+     * @param relativeBallPosition the position of the ball in the robots coordinate system
+     * @return the translated point
+     */
+    private static com.example.alexander.robotop.datastruct.Point translate(com.example.alexander.robotop.datastruct.Point relativeBallPosition, com.example.alexander.robotop.datastruct.Point roboPosition){
+        int x = relativeBallPosition.getX();
+        int y = relativeBallPosition.getY();
+        int transX = roboPosition.getX();
+        int transY = roboPosition.getY();
+        double [] vectorData = {x,y,1};
+        double [][] transData = {{1,0,transX},{0,1,transY},{0,0,1}};
+        RealMatrix trans = new Array2DRowRealMatrix(transData);
+        RealMatrix vector = new Array2DRowRealMatrix(vectorData);
+        RealMatrix mult = trans.multiply(vector);
+        int newX = (int)Math.round(mult.getEntry(0,0));
+        int newY = (int)Math.round(mult.getEntry(1,0));
+        com.example.alexander.robotop.datastruct.Point ret = new com.example.alexander.robotop.datastruct.Point(newX,newY);
+        return ret;
+    }
+
+    /**
+     * calculates the rotation matrix and rotates the point by the angle
+     * @param angle angle of rotation
+     * @param p the relative ball position in the robots coordinate system
+     * @return rotated point
+     */
+    private static com.example.alexander.robotop.datastruct.Point rotate(com.example.alexander.robotop.datastruct.Point p, int angle){
+        int x = p.getX();
+        int y = p.getY();
+        double radian = Math.toRadians(angle);
+        double [] vectorData = {x,y,1};
+        double cos = Math.cos(radian);
+        double sin = Math.sin(radian);
+        double [][] rotData = {{cos,-sin,0},{sin,cos,0},{0,0,1}};
+        RealMatrix rotation = new Array2DRowRealMatrix(rotData);
+        RealMatrix vector = new Array2DRowRealMatrix(vectorData);
+        RealMatrix mult = rotation.multiply(vector);
+        int newX = (int)Math.round(mult.getEntry(0,0));
+        int newY = (int)Math.round(mult.getEntry(1,0));
+        com.example.alexander.robotop.datastruct.Point ret = new com.example.alexander.robotop.datastruct.Point(newX, newY);
+        return ret;
+    }
+
+    /**
+     * calculates the balls position in world coordinates
+     * @param relativeBallPosition the relative ball position
+     * @param angle the angle of the robot
+     * @param roboPosition the postion of the robot
+     * @return
+     */
+    public static com.example.alexander.robotop.datastruct.Point toWorldCoordinates(com.example.alexander.robotop.datastruct.Point relativeBallPosition, int angle, com.example.alexander.robotop.datastruct.Point roboPosition){
+        com.example.alexander.robotop.datastruct.Point rotation = rotate(relativeBallPosition,angle);
+        com.example.alexander.robotop.datastruct.Point ret = translate(rotation, roboPosition);
+        return ret;
     }
 
 }

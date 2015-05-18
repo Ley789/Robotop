@@ -80,6 +80,11 @@ public class MainActivity extends ActionBarActivity {
     }
 
 
+    public void onButtonSearch(View v){
+        Intent i = new Intent(this,SearchActivity.class);
+        startActivity(i);
+    }
+
     public void connect() {
 
         // TODO implement permission request
