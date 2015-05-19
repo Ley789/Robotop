@@ -18,6 +18,7 @@ import com.example.alexander.robotop.movement.BallSearcher;
 import com.example.alexander.robotop.movement.RobotMovement;
 import com.example.alexander.robotop.robotData.RobotOdometry;
 import com.example.alexander.robotop.robotData.RobotTracker;
+import com.example.alexander.robotop.visualOrientation.DetectBlueBlobs;
 import com.example.alexander.robotop.visualOrientation.DetectGreenBlobs;
 import com.example.alexander.robotop.visualOrientation.Homography;
 
@@ -254,7 +255,7 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
 
     public void lookForBalls(Mat mRgba){
 
-        exe.execute(new DetectGreenBlobs(mRgba));
+        exe.execute(new DetectBlueBlobs(mRgba));
         Mat result = null;
         try {
             result = exe.getResult();
@@ -275,7 +276,9 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
                 Point p = homography.getPosition(new Point(data[0], data[1]));
                 points.add(p);
                 com.example.alexander.robotop.datastruct.Point wc = homography.toWorldCoordinates(new com.example.alexander.robotop.datastruct.Point((int)p.y,(int)p.x),odometry.getAngle(), odometry.getPoint());
-                worldCoordinates.add(wc);
+                if(!checkContain(wc)) {
+                    worldCoordinates.add(wc);
+                }
             }
 
             Log.d("Points:", "-----------------------");
@@ -288,6 +291,16 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
 
         Log.d("NULL", "result is null");
 
+    }
+
+    private boolean checkContain(com.example.alexander.robotop.datastruct.Point wc) {
+        double intervall =2;
+        for(com.example.alexander.robotop.datastruct.Point p: worldCoordinates){
+            if(Math.abs(wc.getX()-p.getX())<intervall&& Math.abs(wc.getY()-p.getY())<intervall){
+                return true;
+            }
+        }
+        return false;
     }
 
 }
