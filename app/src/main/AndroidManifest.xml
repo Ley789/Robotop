@@ -52,6 +52,13 @@
 
         </activity>
         <activity
+            android:name=".BallcatcherActivity2"
+            android:label="@string/title_activity_ballcatcher"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation">
+
+        </activity>
+        <activity
             android:name=".HomographyActivity"
             android:label="@string/title_activity_homography"
             android:screenOrientation="landscape">

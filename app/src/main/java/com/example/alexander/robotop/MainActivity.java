@@ -65,7 +65,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void onButtonDetector(View view){
-        Intent i = new Intent(this,BallcatcherActivity.class);
+        Intent i = new Intent(this,BallcatcherActivity2.class);
         startActivity(i);
     }
 

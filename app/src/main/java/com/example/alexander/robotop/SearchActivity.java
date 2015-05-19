@@ -57,7 +57,7 @@ public class SearchActivity extends ActionBarActivity implements CameraBridgeVie
 
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
+        odometry.setOdometry(10,0,0);
         setContentView(R.layout.activity_search);
 
         if (mIsJavaCamera)
@@ -168,7 +168,7 @@ public class SearchActivity extends ActionBarActivity implements CameraBridgeVie
             result.get(0, 0, data);
             //test the turns
             Point p = homography.getPosition(new Point(data[0], data[1])); //CHECK X AND Y;
-            com.example.alexander.robotop.datastruct.Point wc = homography.toWorldCoordinates(new com.example.alexander.robotop.datastruct.Point((int)p.x,(int)p.y),odometry.getAngle(), odometry.getPoint());
+            com.example.alexander.robotop.datastruct.Point wc = homography.toWorldCoordinates(new com.example.alexander.robotop.datastruct.Point((int)p.y,(int)p.x),odometry.getAngle(), odometry.getPoint());
             Log.d("BallPos: ", p.x + "  " + p.y);
             Log.d("WorldCoords: ", wc.getX() + "  " + wc.getY());
         }

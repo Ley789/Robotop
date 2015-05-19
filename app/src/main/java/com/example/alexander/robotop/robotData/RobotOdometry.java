@@ -91,4 +91,10 @@ public class RobotOdometry {
     public Point getPoint(){
         return new Point(x, y);
     }
+
+    public void setOdometry(int x, int y, int angle){
+        this.x = x;
+        this.y = y;
+        this.angle = angle;
+    }
 }
