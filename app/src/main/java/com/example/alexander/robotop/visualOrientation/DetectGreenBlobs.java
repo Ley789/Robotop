@@ -13,7 +13,7 @@ import org.opencv.imgproc.Imgproc;
 
 public class DetectGreenBlobs implements Callable<Mat>{
     private Mat mRgba;
-    private Scalar hsv_min = new Scalar(80, 150, 100);
+    private Scalar hsv_min = new Scalar(100, 130, 120);
     private Scalar hsv_max = new Scalar(145, 255, 255);
 
     public DetectGreenBlobs(Mat mat){

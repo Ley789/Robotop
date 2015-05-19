@@ -62,6 +62,16 @@
         android:onClick="onButtonHomography" />
 
     <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="beacon"
+        android:id="@+id/button"
+
+        android:onClick="onButtonBeacon"
+        android:layout_above="@+id/log"
+        android:layout_centerHorizontal="true" />
+
+    <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

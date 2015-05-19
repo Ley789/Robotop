@@ -64,6 +64,11 @@
             android:screenOrientation="landscape">
         </activity>
         <activity
+            android:name=".BeaconActivity"
+            android:label="@string/title_activity_beacon"
+            android:screenOrientation="landscape">
+        </activity>
+        <activity
             android:name=".SearchActivity"
             android:label="title_activity_search"
             android:screenOrientation="landscape"
