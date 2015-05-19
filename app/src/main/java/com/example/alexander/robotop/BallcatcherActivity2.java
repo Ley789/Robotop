@@ -294,7 +294,7 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
     }
 
     private boolean checkContain(com.example.alexander.robotop.datastruct.Point wc) {
-        double intervall =2;
+        double intervall =4;
         for(com.example.alexander.robotop.datastruct.Point p: worldCoordinates){
             if(Math.abs(wc.getX()-p.getX())<intervall&& Math.abs(wc.getY()-p.getY())<intervall){
                 return true;
