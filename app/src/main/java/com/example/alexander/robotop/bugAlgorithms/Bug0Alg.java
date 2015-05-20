@@ -86,7 +86,7 @@ public class Bug0Alg {
         return true;
     }
 
-    //Todo add point control to check if bug fails
+    //Todo addColorToList point control to check if bug fails
     public boolean avoidObstacle(Point goal){
         Sensor update = Data.getSensorData();
         boolean avoided = true;

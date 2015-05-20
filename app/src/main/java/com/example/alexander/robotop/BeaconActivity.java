@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.alexander.robotop.datastruct.Beacons;
 import com.example.alexander.robotop.datastruct.ColorBound;
+import com.example.alexander.robotop.datastruct.MassCenter;
 import com.example.alexander.robotop.datastruct.Point;
 import com.example.alexander.robotop.visualOrientation.Beacon;
 
@@ -21,8 +22,8 @@ import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
@@ -35,7 +36,7 @@ import java.util.List;
  */
 public class BeaconActivity extends ActionBarActivity implements CameraBridgeViewBase.CvCameraViewListener2,View.OnTouchListener {
     //var to setup beacons
-    private List<ColorBound> colorList = new ArrayList<>();
+    private MassCenter massCenter = MassCenter.getInstance();
     private ColorBound tmpColor = new ColorBound();
     private Beacons beacons = Beacons.getInstance();
 
@@ -47,12 +48,20 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
     private boolean mIsJavaCamera = true;
     private MenuItem mItemSwitchCamera = null;
     private MenuItem mItemSaveColor = null;
-    private MenuItem mItemSaveBeacon = null;
     private MenuItem mItemResetColor = null;
-    private MenuItem mItemResetBeacon = null;
     private MenuItem mItemToggleVision = null;
     private static String TAG ="Test Beacon";
 
+
+    //Testing beacon fucntion
+
+    private static double mMinContourArea = 0.1;
+
+    private List<ColorBound> bounds = new ArrayList<>();
+
+    private List<MatOfPoint> mContours = new ArrayList<MatOfPoint>();
+
+    //done
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
         public void onManagerConnected(int status) {
@@ -123,9 +132,7 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
         Log.i(TAG, "called onCreateOptionsMenu");
         mItemSwitchCamera = menu.add("Toggle Native/Java camera");
         mItemSaveColor = menu.add("Save selected color");
-        mItemSaveBeacon = menu.add("Create new beacon object");
         mItemResetColor = menu.add("Reset selected color");
-        mItemResetBeacon = menu.add("Reset beacons");
         mItemToggleVision = menu.add("Toggle vision");
         return true;
     }
@@ -152,15 +159,10 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
             mOpenCvCameraView.enableView();
             Toast toast = Toast.makeText(this, toastMesage, Toast.LENGTH_LONG);
             toast.show();
-        }else if(item == mItemSaveColor){
+        }else if(item == mItemSaveColor) {
             saveColor();
-        }else if(item == mItemSaveBeacon){
-            //make point as input
-            addNewBeacon(new Point(0,0));
         }else if(item == mItemResetColor){
             resetColorList();
-        }else if(item == mItemResetBeacon){
-            resetBeacons();
         }else if(item == mItemToggleVision){
             toggleVision();
         }
@@ -178,9 +180,22 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         mRgba = inputFrame.rgba();
         Mat mHsv = new Mat();
-        if(showTouchedColor && tmpColor != null){
+        if(showTouchedColor && tmpColor != null) {
+            Mat nRgba = new Mat();
             Imgproc.cvtColor(mRgba,mHsv, Imgproc.COLOR_RGB2HSV_FULL);
-            Core.inRange(mHsv,tmpColor.getmLowerBound(), tmpColor.getmUpperBound(),mRgba);
+            Core.inRange(mHsv,tmpColor.getmLowerBound(), tmpColor.getmUpperBound(),nRgba);
+            //TODO delete following methods coz they are written to test beacon methods
+            MassCenter.getInstance().calculateMassCenter(mRgba);
+            for(int i =0; i< beacons.size(); i++) {
+                Beacon b = beacons.getBeacon(i);
+                b.searchBeaconPoint();
+                org.opencv.core.Point p = b.getRelativeCoordinate();
+                if (p != null) {
+                    Core.circle(nRgba, p, 10, new Scalar(255, 0, 255), 8);
+                    Log.d(TAG, "My id is " + b.getId() + " point " + p.toString() + " and my sec color id " + b.centerIndex.second);
+                }
+            }
+            return nRgba;
         }
         return mRgba;
     }
@@ -221,11 +236,6 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
         for (int i = 0; i < mBlobColorHsv.val.length; i++)
             mBlobColorHsv.val[i] /= pointCount;
 
-        mBlobColorRgba = converScalarHsv2Rgba(mBlobColorHsv);
-
-        Log.i(TAG, "Touched rgba color: (" + mBlobColorRgba.val[0] + ", " + mBlobColorRgba.val[1] +
-                ", " + mBlobColorRgba.val[2] + ", " + mBlobColorRgba.val[3] + ")");
-
 
         tmpColor.setHsvColor(mBlobColorHsv);
 
@@ -234,30 +244,19 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
         return false; // don't need subsequent touch events
     }
 
-    private Scalar converScalarHsv2Rgba(Scalar hsvColor) {
-        Mat pointMatRgba = new Mat();
-        Mat pointMatHsv = new Mat(1, 1, CvType.CV_8UC3, hsvColor);
-        Imgproc.cvtColor(pointMatHsv, pointMatRgba, Imgproc.COLOR_HSV2RGB_FULL, 4);
-        return new Scalar(pointMatRgba.get(0, 0));
-    }
 
 
-    private void addNewBeacon(Point p){
-        beacons.add(new Beacon(p,colorList));
-        colorList.clear();
-    }
-    private void resetBeacons(){
-        beacons.reset();
-    }
     private void resetColorList(){
-        colorList.clear();
+        massCenter.colorList.clear();
     }
     private void saveColor(){
         if(tmpColor != null){
-            colorList.add(tmpColor);
+            massCenter.colorList.add(new ColorBound(tmpColor));
         }
     }
     private void toggleVision(){
         showTouchedColor = !showTouchedColor;
     }
+
+
 }
