@@ -52,6 +52,7 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
     private int aimY;
     private EditText editY;
     private EditText editX;
+    private EditText editAngle;
     private RobotOdometry odometry = RobotOdometry.getInstance();
     private LinkedList<Point> points = new LinkedList<>();
     private LinkedList<com.example.alexander.robotop.datastruct.Point> worldCoordinates = new LinkedList<>();
@@ -188,13 +189,15 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
             dialog.setContentView(R.layout.dialog_xy_input);
             editX = (EditText) dialog.findViewById(R.id.edit_x);
             editY = (EditText) dialog.findViewById(R.id.editY);
+            editAngle = (EditText) dialog.findViewById(R.id.editAngle);
             setXYBtn = (Button) dialog.findViewById(R.id.btn_setXY);
             setXYBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     aimX = Integer.parseInt(editX.getText().toString());
-                    aimY = Integer.parseInt(editX.getText().toString());
-                    odometry.setOdometry(aimX,aimY,0);
+                    aimY = Integer.parseInt(editY.getText().toString());
+                    int angle = Integer.parseInt(editAngle.getText().toString());
+                    odometry.setOdometry(aimX,aimY,angle);
                     dialog.dismiss();
                     start = true;
                 }
@@ -220,14 +223,14 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
             if (state == States.INIT) {
                 lookForBalls(mRgba);
                 try {
-                    Thread.sleep(5000);
+                    Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 //move.robotTurn(DEGREES_TO_TURN);
                 degreesTurned += DEGREES_TO_TURN;
                 if (degreesTurned == 360) {
-                    state = States.COLLECT;
+                    //state = States.COLLECT;
                 }
                 Log.d("turned: ", degreesTurned + "");
             } else if (state == States.COLLECT) {
@@ -273,12 +276,15 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
             for(int i=0; i<result.cols();i++){
                 float[] data = new float[row * elements / 4];
                 result.get(0,i,data);
-                Point p = homography.getPosition(new Point(data[0], data[1]));
+                Point p = homography.getPosition(new Point(data[0], data[1]+data[2]));
+                p.x = -p.x;
                 points.add(p);
                 com.example.alexander.robotop.datastruct.Point wc = homography.toWorldCoordinates(new com.example.alexander.robotop.datastruct.Point((int)p.y,(int)p.x),odometry.getAngle(), odometry.getPoint());
                 if(!checkContain(wc)) {
                     worldCoordinates.add(wc);
                 }
+
+                Log.d("WorldCoord", wc.getX() + " " + wc.getY());
             }
 
             Log.d("Points:", "-----------------------");
@@ -294,7 +300,7 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
     }
 
     private boolean checkContain(com.example.alexander.robotop.datastruct.Point wc) {
-        double intervall =2;
+        double intervall =4;
         for(com.example.alexander.robotop.datastruct.Point p: worldCoordinates){
             if(Math.abs(wc.getX()-p.getX())<intervall&& Math.abs(wc.getY()-p.getY())<intervall){
                 return true;
