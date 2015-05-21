@@ -295,6 +295,7 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
             }
         }
 
+
         Log.d("NULL", "result is null");
 
     }
