@@ -15,6 +15,11 @@ public class ColorBound {
     // Color radius for range checking in HSV color space
     private Scalar mColorRadius = new Scalar(25,50,50,0);
 
+    public ColorBound(){}
+    public ColorBound(ColorBound c){
+        mLowerBound.set(c.getmLowerBound().val);
+        mUpperBound.set(c.getmUpperBound().val);
+    }
     public void setHsvColor(Scalar hsvColor) {
         double minH = (hsvColor.val[0] >= mColorRadius.val[0]) ? hsvColor.val[0]-mColorRadius.val[0] : 0;
         double maxH = (hsvColor.val[0]+mColorRadius.val[0] <= 255) ? hsvColor.val[0]+mColorRadius.val[0] : 255;
