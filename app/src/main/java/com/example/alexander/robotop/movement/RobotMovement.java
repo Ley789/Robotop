@@ -172,7 +172,8 @@ public class RobotMovement {
         if (degree <35) {
             degree *= 1.2*1.15;
         } else if (degree <= 45) {
-            degree *= 1.205;
+            //degree *= 1.205; OldValue
+            degree *= 1.214;
         } else if (degree <= 55) {
             degree *= 1.150*1.11;
         } else if (degree <= 65) {
@@ -251,6 +252,24 @@ public class RobotMovement {
         robotMoveBlindForward(currentPosition.distance(goal));
 
 
+    }
+
+    public void moveBlindWithSafety(Point goal, int safety){
+        RobotOdometry odometry = RobotOdometry.getInstance();
+        Point currentPosition = odometry.getPoint();
+        robotTurn(currentPosition.degreeToPoint(goal) - odometry.getAngle());
+        robotMoveBlindForward(currentPosition.distance(goal) - safety);
+
+
+    }
+
+
+    public void raiseBar(byte value) {
+        comReadWrite(new byte[] { 'o', value, '\r', '\n' });
+    }
+
+    public void decreaseBar() {
+        comReadWrite(new byte[] { 'o', 0, '\r', '\n' });
     }
 
 

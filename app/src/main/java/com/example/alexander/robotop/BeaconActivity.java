@@ -11,10 +11,10 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.example.alexander.robotop.datastruct.BallColors;
 import com.example.alexander.robotop.datastruct.Beacons;
 import com.example.alexander.robotop.datastruct.ColorBound;
 import com.example.alexander.robotop.datastruct.MassCenter;
-import com.example.alexander.robotop.datastruct.Point;
 import com.example.alexander.robotop.visualOrientation.Beacon;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -48,6 +48,7 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
     private boolean mIsJavaCamera = true;
     private MenuItem mItemSwitchCamera = null;
     private MenuItem mItemSaveColor = null;
+    private MenuItem mItemSaveBallColor = null;
     private MenuItem mItemResetColor = null;
     private MenuItem mItemToggleVision = null;
     private static String TAG ="Test Beacon";
@@ -134,6 +135,7 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
         mItemSaveColor = menu.add("Save selected color");
         mItemResetColor = menu.add("Reset selected color");
         mItemToggleVision = menu.add("Toggle vision");
+        mItemSaveBallColor = menu.add("add ball color");
         return true;
     }
 
@@ -149,7 +151,8 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
             if (mIsJavaCamera) {
                 mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.java_surface_view);
                 toastMesage = "Java Camera";
-            } else {
+            }
+           else {
                 mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.native_surface_view);
                 toastMesage = "Native Camera";
             }
@@ -165,6 +168,8 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
             resetColorList();
         }else if(item == mItemToggleVision){
             toggleVision();
+        }else if(item == mItemSaveBallColor){
+            saveBallColor();
         }
 
         return true;
@@ -256,6 +261,10 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
     }
     private void toggleVision(){
         showTouchedColor = !showTouchedColor;
+    }
+
+    private void saveBallColor(){
+        BallColors.colors.add(new ColorBound(tmpColor));
     }
 
 

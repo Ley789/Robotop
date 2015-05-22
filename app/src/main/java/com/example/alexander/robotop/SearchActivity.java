@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.example.alexander.robotop.ThreadControll.Executer;
 import com.example.alexander.robotop.robotData.RobotOdometry;
-import com.example.alexander.robotop.visualOrientation.DetectBlueBlobs;
+import com.example.alexander.robotop.visualOrientation.DetectRedBlobs;
 import com.example.alexander.robotop.visualOrientation.Homography;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -144,7 +144,7 @@ public class SearchActivity extends ActionBarActivity implements CameraBridgeVie
         Mat blueCircles = null;
         Mat result = null;
         //       exe.execute(new DetectRedBlobs(mRgba));
-        exe.execute(new DetectBlueBlobs(mRgba));
+        exe.execute(new DetectRedBlobs(mRgba));
         try {
             //        redCircles = exe.getResult();
             blueCircles = exe.getResult();

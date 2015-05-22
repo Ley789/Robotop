@@ -3,21 +3,21 @@ package com.example.alexander.robotop.visualOrientation;
 /**
  * Created by Alexander on 28/04/2015.
  */
-import java.util.concurrent.Callable;
+import com.example.alexander.robotop.datastruct.ColorBound;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
-public class DetectBlueBlobs implements Callable<Mat>{
-    private Mat mRgba;
-    private Scalar hsv_min = new Scalar(130, 150, 100);
-    private Scalar hsv_max = new Scalar(299, 255, 255);
+import java.util.concurrent.Callable;
 
-    public DetectBlueBlobs(Mat mat){
+public class DetectBalls implements Callable<Mat>{
+    private Mat mRgba;
+    private ColorBound color;
+    public DetectBalls(Mat mat, ColorBound c){
         mRgba = mat;
+        color =c;
     }
     /**
      * Returns a mat of circles of red balls
@@ -30,7 +30,7 @@ public class DetectBlueBlobs implements Callable<Mat>{
         //Mat erodeElement = Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(8,8));
         Imgproc.cvtColor(mRgba, mHSV, Imgproc.COLOR_RGB2HSV_FULL);
 
-        Core.inRange(mHSV, hsv_min, hsv_max, res);
+        Core.inRange(mHSV, color.getmLowerBound(), color.getmUpperBound(), res);
 
         Imgproc.GaussianBlur(res, res, new Size(9,9),0,0);
         //Imgproc.erode(res, res, erodeElement);
