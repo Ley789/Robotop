@@ -14,11 +14,13 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.alexander.robotop.ThreadControll.Executer;
+import com.example.alexander.robotop.datastruct.BallColors;
+import com.example.alexander.robotop.datastruct.ColorBound;
 import com.example.alexander.robotop.movement.BallSearcher;
 import com.example.alexander.robotop.movement.RobotMovement;
 import com.example.alexander.robotop.robotData.RobotOdometry;
 import com.example.alexander.robotop.robotData.RobotTracker;
-import com.example.alexander.robotop.visualOrientation.DetectRedBlobs;
+import com.example.alexander.robotop.visualOrientation.DetectBalls;
 import com.example.alexander.robotop.visualOrientation.Homography;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -311,37 +313,40 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
     }
 
     public void lookForBalls(Mat mRgba){
-
-        exe.execute(new DetectRedBlobs(mRgba));
+        for(ColorBound c: BallColors.colors)
+            exe.execute(new DetectBalls(mRgba, c));
         Mat result = null;
-        try {
-            result = exe.getResult();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
-        if(result!=null) {
-            int row = result.rows();
-            int elements = (int) result.elemSize();
-
-
-            for(int i=0; i<result.cols();i++){
-                float[] data = new float[row * elements / 4];
-                result.get(0,i,data);
-                Point p = homography.getPosition(new Point(data[0], data[1]+data[2]));
-                p.x = -p.x;
-                points.add(p);
-                com.example.alexander.robotop.datastruct.Point wc = homography.toWorldCoordinates(new com.example.alexander.robotop.datastruct.Point((int)p.y,(int)p.x),odometry.getAngle(), odometry.getPoint());
-                if(!checkContain(wc)) {
-                    worldCoordinates.add(wc);
-                    Log.d("WorldCoord", wc.getX() + " " + wc.getY());
-                }else{
-                    Log.d("WorldCoord", "coord not added");
-                }
-
+        for(int j = 0; j < BallColors.colors.size(); j++) {
+            try {
+                result = exe.getResult();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
             }
+
+            if (result != null) {
+                int row = result.rows();
+                int elements = (int) result.elemSize();
+
+
+                for (int i = 0; i < result.cols(); i++) {
+                    float[] data = new float[row * elements / 4];
+                    result.get(0, i, data);
+                    Point p = homography.getPosition(new Point(data[0], data[1] + data[2]));
+                    p.x = -p.x;
+                    points.add(p);
+                    com.example.alexander.robotop.datastruct.Point wc = homography.toWorldCoordinates(new com.example.alexander.robotop.datastruct.Point((int) p.y, (int) p.x), odometry.getAngle(), odometry.getPoint());
+                    if (!checkContain(wc)) {
+                        worldCoordinates.add(wc);
+                        Log.d("WorldCoord", wc.getX() + " " + wc.getY());
+                    } else {
+                        Log.d("WorldCoord", "coord not added");
+                    }
+
+                }
+            }
+        }
 
             Log.d("Points:", "-----------------------");
             for(int i = 0; i < points.size(); i++){
@@ -349,7 +354,7 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
                 //Log.d("WC: ", worldCoordinates.get(i).toString());
 
             }
-        }
+
 
         Log.d("NULL", "result is null");
 
