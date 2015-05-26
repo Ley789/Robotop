@@ -69,6 +69,11 @@ public class MainActivity extends ActionBarActivity {
         startActivity(i);
     }
 
+    public void onDetectorTest(View view){
+        Intent i = new Intent(this,BallcatcherActivity22.class);
+        startActivity(i);
+    }
+
     public void onButtonHomography(View v){
         Intent i = new Intent(this,HomographyActivity.class);
         startActivity(i);

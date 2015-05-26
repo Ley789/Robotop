@@ -183,7 +183,7 @@ public class RobotMovement {
         } else if (degree <= 85) {
             degree *= 1.135;
         } else {
-            degree *= 1.135;
+            degree *= 1.170;
         }
         return (byte) (si*degree);
     }
@@ -259,6 +259,17 @@ public class RobotMovement {
         Point currentPosition = odometry.getPoint();
         robotTurn(currentPosition.degreeToPoint(goal) - odometry.getAngle());
         robotMoveBlindForward(currentPosition.distance(goal) - safety);
+
+
+    }
+
+    public void moveHalfWay(Point goal){
+        RobotOdometry odometry = RobotOdometry.getInstance();
+        Point currentPosition = odometry.getPoint();
+        robotTurn(currentPosition.degreeToPoint(goal) - odometry.getAngle());
+        int dist = currentPosition.distance(goal);
+        int halfDist = dist/2;
+        robotMoveBlindForward(halfDist);
 
 
     }

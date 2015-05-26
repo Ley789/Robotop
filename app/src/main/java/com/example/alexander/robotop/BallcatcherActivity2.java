@@ -29,8 +29,10 @@ import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
+import org.opencv.core.Scalar;
 
 import java.util.LinkedList;
 import java.util.concurrent.ExecutionException;
@@ -46,9 +48,13 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
         INIT, COLLECT, GO_HOME;
     }
     boolean looking = true;
+    private final int CNT_LOOK = 3;
+    private boolean halfWayLook = false;
+    private int lookedOnce = 0;
+    private int i = 0;
     int catched = 0;
-    private final byte RAISE_BAR = (byte)150;
-    private boolean start = false; //TODO make false
+    private final byte RAISE_BAR = (byte)130;
+    private boolean start = false;
     private States state = States.INIT;
     private RobotMovement move = RobotMovement.getInstance();
     private BallSearcher searcher = new BallSearcher();
@@ -272,19 +278,39 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                move.robotTurn(DEGREES_TO_TURN);
-                degreesTurned += DEGREES_TO_TURN;
-                if (degreesTurned == 360) {
-                    looking = false;
-                    for (com.example.alexander.robotop.datastruct.Point p : worldCoordinates) {
-                        Log.d("WORLD", p.toString());
+                lookedOnce++;
+                if(lookedOnce > CNT_LOOK) {//the robot looks 5 times before he goes on
+                    lookedOnce = 0;
+                    move.robotTurn(DEGREES_TO_TURN);
+                    degreesTurned += DEGREES_TO_TURN;
+                    if (degreesTurned == 360) {
+                        looking = false;
+                        if (worldCoordinates.isEmpty()) {
+                            looking = true;
+                        } else {
+                            catchBall(getNearestBall());
+                        }
+                        degreesTurned = 0;
                     }
+                    Log.d("turned: ", degreesTurned + "");
+                }//end if(lookedOnce > CNT_LOOK)
+            }//end if(looking)
+
+            if(halfWayLook){
+                Log.d("Halfway", "looking");
+                lookForBalls(mRgba);
+                if(worldCoordinates.isEmpty()){
+                    halfWayLook = false;
+                    looking = true;
+                    Log.d("Halfway", "cant find anymore");
+                }else{
+                    Log.d("Halfway", "got it");
+                    halfWayLook = false;
                     catchBall(getNearestBall());
-                    degreesTurned = 0;
                 }
-                Log.d("turned: ", degreesTurned + "");
-            }
-        }
+            }// end if(halfWayLook)
+
+        }// end if(start)
         return mRgba;
 
     }
@@ -335,11 +361,13 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
                     result.get(0, i, data);
                     Point p = homography.getPosition(new Point(data[0], data[1] + data[2]));
                     p.x = -p.x;
+                    Core.circle(mRgba, p, 10,new Scalar(0,0,255));
                     points.add(p);
                     com.example.alexander.robotop.datastruct.Point wc = homography.toWorldCoordinates(new com.example.alexander.robotop.datastruct.Point((int) p.y, (int) p.x), odometry.getAngle(), odometry.getPoint());
                     if (!checkContain(wc)) {
                         worldCoordinates.add(wc);
                         Log.d("WorldCoord", wc.getX() + " " + wc.getY());
+                        Log.d("Old coord", p.x + "  " + p.y);
                     } else {
                         Log.d("WorldCoord", "coord not added");
                     }
@@ -386,6 +414,12 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
     }
 
     public void catchBall(com.example.alexander.robotop.datastruct.Point point){
+        if(odometry.getPoint().distance(point) > 120){
+            Log.d("HalfWay", "halfway");
+            move.moveHalfWay(point);
+            halfWayLook = true;
+            return;
+        }
         move.moveBlindWithSafety(point, SAFETY_DIST);
         try {
             Thread.sleep(3000);

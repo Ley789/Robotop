@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.alexander.robotop.ThreadControll.Executer;
 import com.example.alexander.robotop.datastruct.BallColors;
@@ -21,10 +20,10 @@ import com.example.alexander.robotop.movement.RobotMovement;
 import com.example.alexander.robotop.robotData.RobotOdometry;
 import com.example.alexander.robotop.robotData.RobotTracker;
 import com.example.alexander.robotop.visualOrientation.DetectBalls;
+import com.example.alexander.robotop.visualOrientation.DetectBallsGray;
 import com.example.alexander.robotop.visualOrientation.Homography;
 
 import org.opencv.android.BaseLoaderCallback;
-import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.android.LoaderCallbackInterface;
@@ -37,8 +36,6 @@ import org.opencv.core.Scalar;
 import java.util.LinkedList;
 import java.util.concurrent.ExecutionException;
 
-import static com.example.alexander.robotop.communication.Connection.comReadWrite;
-
 /**
  * Created by Alexander on 28/04/2015.
  */
@@ -50,7 +47,7 @@ public class BallcatcherActivity22 extends ActionBarActivity  implements CvCamer
     boolean looking = true;
     int catched = 0;
     private final byte RAISE_BAR = (byte)150;
-    private boolean start = false; //TODO make false
+    private boolean start = true; //TODO make false
     private States state = States.INIT;
     private RobotMovement move = RobotMovement.getInstance();
     private BallSearcher searcher = new BallSearcher();
@@ -69,7 +66,7 @@ public class BallcatcherActivity22 extends ActionBarActivity  implements CvCamer
 
     private Executer<Mat> exe = new Executer<Mat>();
     private Homography homography;
-    private CameraBridgeViewBase mOpenCvCameraView;
+    private Tutorial3View mOpenCvCameraView;
     private boolean mIsJavaCamera = true;
     private boolean locatedPosition = false;
     private MenuItem mItemSwitchCamera = null;
@@ -103,35 +100,23 @@ public class BallcatcherActivity22 extends ActionBarActivity  implements CvCamer
         Log.i(TAG, "called onCreate");
         super.onCreate(savedInstanceState);
         odometry.setOdometry(0,0,0); //TODO delete
-        dialog = new Dialog(this);
-        dialog.setContentView(R.layout.dialog_xy_input);
-        editX = (EditText) dialog.findViewById(R.id.edit_x);
-        editY = (EditText) dialog.findViewById(R.id.editY);
-        setXYBtn = (Button) dialog.findViewById(R.id.btn_setXY);
-        setXYBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                aimX = Integer.parseInt(editX.getText().toString());
-                aimY = Integer.parseInt(editX.getText().toString());
-                dialog.dismiss();
-                start = true;
-            }
-        });
-        dialog.show();
-
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         setContentView(R.layout.activity_ballcatcher);
 
-        if (mIsJavaCamera)
-            mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.java_surface_view);
-        else
-            mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.native_surface_view);
-        mOpenCvCameraView.setMaxFrameSize(1920, 1080);
+
+        mOpenCvCameraView = (Tutorial3View) findViewById(R.id.java_surface_view);
+
+
+
 
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
+        mOpenCvCameraView.setMaxFrameSize(800, 600);
+
+
 
         mOpenCvCameraView.setCvCameraViewListener(this);
+
 
         homography = Homography.getInstance();
 
@@ -175,22 +160,7 @@ public class BallcatcherActivity22 extends ActionBarActivity  implements CvCamer
         Log.i(TAG, "called onOptionsItemSelected; selected item: " + item);
         int id = item.getItemId();
         if (item == mItemSwitchCamera) {
-            mOpenCvCameraView.setVisibility(SurfaceView.GONE);
-            mIsJavaCamera = !mIsJavaCamera;
-
-            if (mIsJavaCamera) {
-                mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.java_surface_view);
-                toastMesage = "Java Camera";
-            } else {
-                mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.native_surface_view);
-                toastMesage = "Native Camera";
-            }
-
-            mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
-            mOpenCvCameraView.setCvCameraViewListener(this);
-            mOpenCvCameraView.enableView();
-            Toast toast = Toast.makeText(this, toastMesage, Toast.LENGTH_LONG);
-            toast.show();
+            mOpenCvCameraView.flash();
         }
         else if(id == R.id.change_odo){
             dialog = new Dialog(this);
@@ -224,44 +194,6 @@ public class BallcatcherActivity22 extends ActionBarActivity  implements CvCamer
     }
 
 
-    /*
-    public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
-        Mat mRgba = inputFrame.rgba();
-        Log.d("inside", "inside");
-        if(start) {
-
-            if (state == States.INIT) {
-                lookForBalls(mRgba);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                move.robotTurn(DEGREES_TO_TURN);
-                degreesTurned += DEGREES_TO_TURN;
-                if (degreesTurned == 360) {
-                    state = States.COLLECT;
-                    for(com.example.alexander.robotop.datastruct.Point p : worldCoordinates){
-                        Log.d("WORLD", p.toString());
-                    }
-                }
-                Log.d("turned: ", degreesTurned + "");
-            } else if (state == States.COLLECT) {
-                com.example.alexander.robotop.datastruct.Point currentPoint = worldCoordinates.poll();
-                move.moveBlind(currentPoint);
-                bringToChamber();
-                if (worldCoordinates.isEmpty()) {
-                    state = States.GO_HOME;
-                }
-            } else if (state == States.GO_HOME) {
-                move.moveBlind(new com.example.alexander.robotop.datastruct.Point(0, 0)); //TODO drive home
-            }
-
-        }
-        return mRgba;
-
-    }*/
-
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
         Mat mRgba = inputFrame.rgba();
         Log.d("inside", "inside");
@@ -270,7 +202,7 @@ public class BallcatcherActivity22 extends ActionBarActivity  implements CvCamer
             if (looking) {
                 lookForBalls(mRgba);
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -290,6 +222,7 @@ public class BallcatcherActivity22 extends ActionBarActivity  implements CvCamer
 
 
     public void lookForBalls(Mat mRgba){
+        Log.d("colors", BallColors.colors.size() + "");
         for(ColorBound c: BallColors.colors)
             exe.execute(new DetectBalls(mRgba, c));
         Mat result = null;
@@ -312,17 +245,20 @@ public class BallcatcherActivity22 extends ActionBarActivity  implements CvCamer
                     result.get(0, i, data);
                     Point p = homography.getPosition(new Point(data[0], data[1] + data[2]));
                     p.x = -p.x;
-                    Core.circle(mRgba, p, 10,new Scalar(0,0,255));
+                    Core.circle(mRgba, new Point(data[0], data[1]), (int)data[2],new Scalar(0,0,255));
                     points.add(p);
                     com.example.alexander.robotop.datastruct.Point wc = homography.toWorldCoordinates(new com.example.alexander.robotop.datastruct.Point((int) p.y, (int) p.x), odometry.getAngle(), odometry.getPoint());
                     if (!checkContain(wc)) {
                         worldCoordinates.add(wc);
                         Log.d("WorldCoord", wc.getX() + " " + wc.getY());
+                        Log.d("WorldCoord", p.x + " " + p.y);
                     } else {
-                        Log.d("WorldCoord", "coord not added");
+                        Log.d("WorldCoord", "coord not added " + wc.getX() + " " + wc.getY());
                     }
 
                 }
+            }else{
+                Log.d("NULL", "result is null");
             }
         }
 
@@ -335,7 +271,58 @@ public class BallcatcherActivity22 extends ActionBarActivity  implements CvCamer
 
 
 
-        Log.d("NULL", "result is null");
+
+    }
+
+
+    public void lookForBallsGray(Mat mRgba){
+        exe.execute(new DetectBallsGray(mRgba));
+        Mat result = null;
+        try {
+            result = exe.getResult();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+
+        if (result != null) {
+                int row = result.rows();
+                int elements = (int) result.elemSize();
+
+
+                for (int i = 0; i < result.cols(); i++) {
+                    float[] data = new float[row * elements / 4];
+                    result.get(0, i, data);
+                    Point p = homography.getPosition(new Point(data[0], data[1] + data[2]));
+                    p.x = -p.x;
+                    Core.circle(mRgba, new Point(data[0], data[1]), (int)data[2],new Scalar(0,0,255));
+                    points.add(p);
+                    com.example.alexander.robotop.datastruct.Point wc = homography.toWorldCoordinates(new com.example.alexander.robotop.datastruct.Point((int) p.y, (int) p.x), odometry.getAngle(), odometry.getPoint());
+                    if (!checkContain(wc)) {
+                        worldCoordinates.add(wc);
+                        Log.d("WorldCoord", wc.getX() + " " + wc.getY());
+                        Log.d("WorldCoord", p.x + " " + p.y);
+                    } else {
+                        Log.d("WorldCoord", "coord not added " + wc.getX() + " " + wc.getY());
+                    }
+
+                }
+            }else{
+                Log.d("NULL", "result is null");
+            }
+
+
+        Log.d("Points:", "-----------------------");
+        for(int i = 0; i < points.size(); i++){
+            Log.d("Points: ", points.get(i).toString());
+            //Log.d("WC: ", worldCoordinates.get(i).toString());
+
+        }
+
+
+
 
     }
 
@@ -348,23 +335,6 @@ public class BallcatcherActivity22 extends ActionBarActivity  implements CvCamer
         }
         return false;
     }
-
-    com.example.alexander.robotop.datastruct.Point getNearestBall(){
-        int min_dist = 99999;
-        com.example.alexander.robotop.datastruct.Point nearest = null;
-        for(com.example.alexander.robotop.datastruct.Point p : worldCoordinates){
-            int dist = odometry.getPoint().distance(p);
-            if(dist < min_dist){
-                min_dist = dist;
-                nearest = p;
-            }
-        }
-        worldCoordinates.clear();
-        return nearest;
-    }
-
-
-
 
 }
 

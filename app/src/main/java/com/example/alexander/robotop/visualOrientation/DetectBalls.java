@@ -18,6 +18,7 @@ public class DetectBalls implements Callable<Mat>{
     public DetectBalls(Mat mat, ColorBound c){
         mRgba = mat;
         color =c;
+
     }
     /**
      * Returns a mat of circles of red balls
@@ -27,15 +28,20 @@ public class DetectBalls implements Callable<Mat>{
         Mat mHSV = new Mat();
         Mat res = new Mat();
         Mat circles = new Mat();
-        //Mat erodeElement = Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(8,8));
+        Mat erodeElement = Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(5,5));
         Imgproc.cvtColor(mRgba, mHSV, Imgproc.COLOR_RGB2HSV_FULL);
 
         Core.inRange(mHSV, color.getmLowerBound(), color.getmUpperBound(), res);
 
+        //morphological closing (fill small holes in the foreground)
+        Imgproc.dilate( res, res, erodeElement );
+        Imgproc.erode(res, res, erodeElement);
+
         Imgproc.GaussianBlur(res, res, new Size(9,9),0,0);
+
         //Imgproc.erode(res, res, erodeElement);
         //Imgproc.erode(res, res, erodeElement);
-        Imgproc.HoughCircles(res, circles, Imgproc.CV_HOUGH_GRADIENT, 2, res.height()/4,500, 50, 0, 0);
+        Imgproc.HoughCircles(res, circles, Imgproc.CV_HOUGH_GRADIENT, 2, res.height()/4,100, 70, 0, 150);
         if(circles.rows() > 0) {
             return circles;
         }

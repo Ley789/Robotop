@@ -9,7 +9,6 @@ import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.example.alexander.robotop.datastruct.BallColors;
 import com.example.alexander.robotop.datastruct.Beacons;
@@ -44,7 +43,7 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
     private Mat mRgba;
     private Scalar mBlobColorRgba;
     private Scalar mBlobColorHsv;
-    private CameraBridgeViewBase mOpenCvCameraView;
+    private Tutorial3View mOpenCvCameraView;
     private boolean mIsJavaCamera = true;
     private MenuItem mItemSwitchCamera = null;
     private MenuItem mItemSaveColor = null;
@@ -96,14 +95,13 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
 
         setContentView(R.layout.activity_beacon);
 
-        if (mIsJavaCamera)
-            mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.java_surface_view);
-        else
-            mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.native_surface_view);
+
+        mOpenCvCameraView = (Tutorial3View) findViewById(R.id.java_surface_view);
 
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
 
         mOpenCvCameraView.setCvCameraViewListener(this);
+
     }
 
 
@@ -131,7 +129,7 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         Log.i(TAG, "called onCreateOptionsMenu");
-        mItemSwitchCamera = menu.add("Toggle Native/Java camera");
+        mItemSwitchCamera = menu.add("flash");
         mItemSaveColor = menu.add("Save selected color");
         mItemResetColor = menu.add("Reset selected color");
         mItemToggleVision = menu.add("Toggle vision");
@@ -145,23 +143,7 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
         Log.i(TAG, "called onOptionsItemSelected; selected item: " + item);
 
         if (item == mItemSwitchCamera) {
-            mOpenCvCameraView.setVisibility(SurfaceView.GONE);
-            mIsJavaCamera = !mIsJavaCamera;
-
-            if (mIsJavaCamera) {
-                mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.java_surface_view);
-                toastMesage = "Java Camera";
-            }
-           else {
-                mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.native_surface_view);
-                toastMesage = "Native Camera";
-            }
-
-            mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
-            mOpenCvCameraView.setCvCameraViewListener(this);
-            mOpenCvCameraView.enableView();
-            Toast toast = Toast.makeText(this, toastMesage, Toast.LENGTH_LONG);
-            toast.show();
+            mOpenCvCameraView.flash();
         }else if(item == mItemSaveColor) {
             saveColor();
         }else if(item == mItemResetColor){
@@ -170,6 +152,7 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
             toggleVision();
         }else if(item == mItemSaveBallColor){
             saveBallColor();
+            Log.d("saved", "ballcolor");
         }
 
         return true;

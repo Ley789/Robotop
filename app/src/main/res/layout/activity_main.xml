@@ -80,4 +80,14 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:onClick="onButtonSearch"/>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="detect test"
+        android:id="@+id/button2"
+        android:layout_below="@+id/detect"
+        android:layout_alignStart="@+id/detect"
+        android:onClick="onDetectorTest" />
 </RelativeLayout>
