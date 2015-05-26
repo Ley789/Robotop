@@ -52,7 +52,7 @@ public class Beacon {
         for(org.opencv.core.Point f : first){
             for(org.opencv.core.Point s: second){
                // Log.d(TAG, " first : "+ f.toString() + " || second: " + s.toString());
-                if(f.y < s.y && (f.x - s.x < 15)){
+                if(f.y < s.y && (f.x - s.x < 5)){
 
                     return new org.opencv.core.Point(f.x, (s.y - f.y)/2 + f.y);
                 }
