@@ -14,6 +14,7 @@ import com.example.alexander.robotop.datastruct.BallColors;
 import com.example.alexander.robotop.datastruct.Beacons;
 import com.example.alexander.robotop.datastruct.ColorBound;
 import com.example.alexander.robotop.datastruct.MassCenter;
+import com.example.alexander.robotop.modell.Detector;
 import com.example.alexander.robotop.visualOrientation.Beacon;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -95,10 +96,11 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
         setContentView(R.layout.activity_beacon);
 
 
+
         mOpenCvCameraView = (Tutorial3View) findViewById(R.id.java_surface_view);
 
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
-
+        mOpenCvCameraView.setMaxFrameSize(800, 600);
         mOpenCvCameraView.setCvCameraViewListener(this);
         mOpenCvCameraView.setMaxFrameSize(800, 600);
 
@@ -171,8 +173,8 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
         if(showTouchedColor && tmpColor != null) {
             Mat nRgba = new Mat();
             Imgproc.cvtColor(mRgba,mHsv, Imgproc.COLOR_RGB2HSV_FULL);
-            Core.inRange(mHsv,tmpColor.getmLowerBound(), tmpColor.getmUpperBound(),nRgba);
-
+//            Core.inRange(mHsv,tmpColor.getmLowerBound(), tmpColor.getmUpperBound(),nRgba);
+            nRgba = Detector.detectBlob(mHsv,tmpColor);
             //TODO delete following methods coz they are written to test beacon methods
             MassCenter.getInstance().calculateMassCenter(mRgba);
             for(int i =0; i< beacons.size(); i++) {

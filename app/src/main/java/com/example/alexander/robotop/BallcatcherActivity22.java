@@ -251,7 +251,7 @@ public class BallcatcherActivity22 extends ActionBarActivity  implements CvCamer
                     if (!checkContain(wc)) {
                         worldCoordinates.add(wc);
                         Log.d("WorldCoord", wc.getX() + " " + wc.getY());
-                        Log.d("WorldCoord", p.x + " " + p.y);
+                        Log.d("WorldCoord", "Relative points: " + p.x + " " + p.y);
                     } else {
                         Log.d("WorldCoord", "coord not added " + wc.getX() + " " + wc.getY());
                     }

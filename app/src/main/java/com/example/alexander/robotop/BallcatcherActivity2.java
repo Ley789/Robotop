@@ -47,9 +47,11 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
     private enum States {
         INIT, COLLECT, GO_HOME;
     }
-    boolean looking = true;
-    private final int CNT_LOOK = 3;
+    private boolean lookForBeacons = false;
     private boolean halfWayLook = false;
+    private boolean looking = true;
+    private final int CNT_LOOK = 3;
+
     private int lookedOnce = 0;
     private int i = 0;
     int catched = 0;
@@ -134,6 +136,8 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
         mOpenCvCameraView.setMaxFrameSize(1920, 1080);
 
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
+        mOpenCvCameraView.setMaxFrameSize(800, 600);
+
 
         mOpenCvCameraView.setCvCameraViewListener(this);
 
@@ -310,6 +314,15 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
                 }
             }// end if(halfWayLook)
 
+            if(lookForBeacons){
+                Log.d("Beacon", "looking for beacons");
+                if(lookForBeacons(mRgba)){
+                    lookForBeacons = false;
+                }else{
+                    move.robotTurn(DEGREES_TO_TURN);
+                }
+            }
+
         }// end if(start)
         return mRgba;
 
@@ -335,7 +348,12 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
     }
 
     public void goHome(){
-        move.moveBlind(new com.example.alexander.robotop.datastruct.Point(0, 0)); //TODO drive home
+                updateOdoWithBeacons();
+                move.moveBlind(new com.example.alexander.robotop.datastruct.Point(0, 0)); //TODO drive home
+    }
+
+    public boolean lookForBeacons(Mat mRgba){
+        return true; // TODO implement
     }
 
     public void lookForBalls(Mat mRgba){
@@ -436,6 +454,10 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
         }else{
             looking = true;
         }
+    }
+
+    private void updateOdoWithBeacons(){
+        //TODO implement
     }
 
 

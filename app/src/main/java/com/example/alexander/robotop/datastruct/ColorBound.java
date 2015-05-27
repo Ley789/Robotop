@@ -1,7 +1,5 @@
 package com.example.alexander.robotop.datastruct;
 
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
 
 /**
@@ -12,7 +10,7 @@ public class ColorBound {
     private Scalar mLowerBound = new Scalar(0);
     private Scalar mUpperBound = new Scalar(0);
     // Color radius for range checking in HSV color space
-    private Scalar mColorRadius = new Scalar(10,75,50,0);
+    private Scalar mColorRadius = new Scalar(20,150,70,0);
 
     public ColorBound(){}
     public ColorBound(ColorBound c){
@@ -43,7 +41,6 @@ public class ColorBound {
             mUpperBound.val[2] = 255;
         }
      }
-
 
 
     public Scalar getmLowerBound() {
