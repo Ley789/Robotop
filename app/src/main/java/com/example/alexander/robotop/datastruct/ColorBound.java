@@ -53,4 +53,8 @@ public class ColorBound {
     public Scalar getmUpperBound() {
         return mUpperBound;
     }
+    @Override
+    public String toString(){
+        return " Lower bound " + mLowerBound.toString() + " | "+ mUpperBound.toString();
+    }
 }

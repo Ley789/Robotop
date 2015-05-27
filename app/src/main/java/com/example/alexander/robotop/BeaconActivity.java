@@ -229,7 +229,7 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
 
 
         tmpColor.setHsvColor(mBlobColorHsv);
-
+        Log.d("COLOR", tmpColor.toString());
         touchedRegionRgba.release();
         touchedRegionHsv.release();
         return false; // don't need subsequent touch events
