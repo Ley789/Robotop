@@ -44,14 +44,7 @@ public class ColorBound {
         }
      }
 
-    public static Mat handleRedBlobs(Mat mHsv){
-        Mat threshold = new Mat();
-        Mat threshold2 = new Mat();
-        Core.inRange(mHsv, new Scalar(0,100,100), new Scalar(10,255,255), threshold);
-        Core.inRange(mHsv, new Scalar(340,100,100), new Scalar(360,255,255), threshold2);
-        Core.bitwise_or(threshold,threshold2,threshold);
-        return threshold;
-    }
+
 
     public Scalar getmLowerBound() {
         return mLowerBound;

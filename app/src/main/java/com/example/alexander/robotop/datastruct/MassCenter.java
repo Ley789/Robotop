@@ -1,5 +1,7 @@
 package com.example.alexander.robotop.datastruct;
 
+import com.example.alexander.robotop.modell.Detector;
+
 import org.opencv.core.*;
 import org.opencv.core.Point;
 import org.opencv.imgproc.Imgproc;
@@ -86,8 +88,8 @@ public class MassCenter {
         Imgproc.pyrDown(mPyrDownMat, mPyrDownMat);
         Imgproc.cvtColor(mPyrDownMat, mHsvMat, Imgproc.COLOR_RGB2HSV_FULL);
 
-        Core.inRange(mHsvMat, c.getmLowerBound(), c.getmUpperBound(), mMask);
-
+       // Core.inRange(mHsvMat, c.getmLowerBound(), c.getmUpperBound(), mMask);
+        mMask = Detector.detectBlob(mHsvMat,c);
         Imgproc.dilate(mMask, mDilatedMask, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(4, 4)));
 
         Imgproc.erode(mDilatedMask, mDilatedMask, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(4, 4)));
