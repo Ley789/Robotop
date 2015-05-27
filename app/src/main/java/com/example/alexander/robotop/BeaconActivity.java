@@ -54,7 +54,6 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
 
 
     //Testing beacon fucntion
-
     private static double mMinContourArea = 0.1;
 
     private List<ColorBound> bounds = new ArrayList<>();
@@ -101,6 +100,7 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
 
         mOpenCvCameraView.setCvCameraViewListener(this);
+        mOpenCvCameraView.setMaxFrameSize(800, 600);
 
     }
 
@@ -172,15 +172,18 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
             Mat nRgba = new Mat();
             Imgproc.cvtColor(mRgba,mHsv, Imgproc.COLOR_RGB2HSV_FULL);
             Core.inRange(mHsv,tmpColor.getmLowerBound(), tmpColor.getmUpperBound(),nRgba);
+
             //TODO delete following methods coz they are written to test beacon methods
             MassCenter.getInstance().calculateMassCenter(mRgba);
             for(int i =0; i< beacons.size(); i++) {
                 Beacon b = beacons.getBeacon(i);
                 b.searchBeaconPoint();
                 org.opencv.core.Point p = b.getRelativeCoordinate();
+                if(MassCenter.getInstance().getMassRect() != null && MassCenter.getInstance().getMassRect().size() >0 && MassCenter.getInstance().getMassRect().get(0) != null)
+                Log.d(TAG, "number first color Rects "+ MassCenter.getInstance().getMassRect().get(0).size());
                 if (p != null) {
-                    Core.circle(nRgba, p, 10, new Scalar(255, 0, 255), 8);
-                    Log.d(TAG, "My id is " + b.getId() + " point " + p.toString() + " and my sec color id " + b.centerIndex.second);
+                    Core.circle(nRgba, p, 10, new Scalar(100, 100, 100), 8);
+                    //Log.d(TAG, "My id is " + b.getId() + " point " + p.toString() + " and my sec color id " + b.centerIndex.second);
                 }
             }
             return nRgba;

@@ -7,6 +7,8 @@ import com.example.alexander.robotop.datastruct.MassCenter;
 import com.example.alexander.robotop.datastruct.Pair;
 import com.example.alexander.robotop.datastruct.Point;
 
+import org.opencv.core.Rect;
+
 import java.util.List;
 
 /**
@@ -35,26 +37,38 @@ public class Beacon {
 
 
     //do not use this function, it will be called from calculateMassPoint
-    public void searchBeaconPoint(){
-        List<List<org.opencv.core.Point>> massCenter = MassCenter.getInstance().getMassCenter();
-        if(massCenter.size() <= this.centerIndex.second || massCenter.size() <= this.centerIndex.first){
+    public void searchBeaconPoint() {
+        List<List<Rect>> massCenter = MassCenter.getInstance().getMassRect();
+        if (massCenter.size() <= this.centerIndex.second || massCenter.size() <= this.centerIndex.first) {
             this.relativeCoordinate = null;
             return;
         }
-        Log.d(TAG,""+massCenter.size());
-        this.relativeCoordinate = filterData(massCenter.get(centerIndex.first)
-        ,massCenter.get(centerIndex.second));
+        Log.d(TAG, "" + massCenter.size());
+        Rect r = filterData(massCenter.get(centerIndex.first)
+                , massCenter.get(centerIndex.second));
+        if (r != null) {
+            this.relativeCoordinate = new org.opencv.core.Point(r.x + r.width / 2, r.y + r.height);
+
+        } else {
+            this.relativeCoordinate = null;
+        }
     }
 
-    private org.opencv.core.Point filterData(List<org.opencv.core.Point> first, List<org.opencv.core.Point> second){
+    private Rect filterData(List<Rect> first, List<Rect> second){
         if(first == null || second == null)
             return null;
-        for(org.opencv.core.Point f : first){
-            for(org.opencv.core.Point s: second){
+        org.opencv.core.Point f = new org.opencv.core.Point();
+        org.opencv.core.Point s = new org.opencv.core.Point();
+        for(Rect fRect : first){
+            f.x = (fRect.x + fRect.width/2);
+            f.y = (fRect.y + fRect.height/2);
+            for(Rect sRect: second){
+                s.x = (sRect.x + sRect.width/2);
+                s.y = (sRect.y + sRect.height/2);
                // Log.d(TAG, " first : "+ f.toString() + " || second: " + s.toString());
                 if(f.y < s.y && (f.x - s.x < 5)){
 
-                    return new org.opencv.core.Point(f.x, (s.y - f.y)/2 + f.y);
+                    return sRect;
                 }
             }
         }

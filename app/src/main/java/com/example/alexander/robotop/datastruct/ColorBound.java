@@ -1,5 +1,7 @@
 package com.example.alexander.robotop.datastruct;
 
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
 
 /**
@@ -10,7 +12,7 @@ public class ColorBound {
     private Scalar mLowerBound = new Scalar(0);
     private Scalar mUpperBound = new Scalar(0);
     // Color radius for range checking in HSV color space
-    private Scalar mColorRadius = new Scalar(10,100,50,0);
+    private Scalar mColorRadius = new Scalar(10,75,50,0);
 
     public ColorBound(){}
     public ColorBound(ColorBound c){
@@ -19,7 +21,7 @@ public class ColorBound {
     }
     public void setHsvColor(Scalar hsvColor) {
         double minH = (hsvColor.val[0] >= mColorRadius.val[0]) ? hsvColor.val[0]-mColorRadius.val[0] : 0;
-        double maxH = (hsvColor.val[0]+mColorRadius.val[0] <= 255) ? hsvColor.val[0]+mColorRadius.val[0] : 255;
+        double maxH = (hsvColor.val[0]+mColorRadius.val[0] <= 360) ? hsvColor.val[0]+mColorRadius.val[0] : 360;
         mLowerBound.val[0] = minH;
         mUpperBound.val[0] = maxH;
         mLowerBound.val[1] = hsvColor.val[1] - mColorRadius.val[1];
@@ -42,6 +44,14 @@ public class ColorBound {
         }
      }
 
+    public static Mat handleRedBlobs(Mat mHsv){
+        Mat threshold = new Mat();
+        Mat threshold2 = new Mat();
+        Core.inRange(mHsv, new Scalar(0,100,100), new Scalar(10,255,255), threshold);
+        Core.inRange(mHsv, new Scalar(340,100,100), new Scalar(360,255,255), threshold2);
+        Core.bitwise_or(threshold,threshold2,threshold);
+        return threshold;
+    }
 
     public Scalar getmLowerBound() {
         return mLowerBound;
