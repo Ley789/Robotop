@@ -2,8 +2,13 @@ package com.example.alexander.robotop.datastruct;
 
 import com.example.alexander.robotop.modell.Detector;
 
-import org.opencv.core.*;
-import org.opencv.core.Point;
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.MatOfPoint2f;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
@@ -69,7 +74,7 @@ public class MassCenter {
             MatOfPoint points = new MatOfPoint(approxCurve.toArray());
             r = Imgproc.boundingRect(points);
             // Get bounding rect of contour
-            if(r.height * r.width > 80 && approxCurve.toArray().length < 7)
+            if(r.height * r.width > 120 && approxCurve.toArray().length < 7)
                rect.add(r);
         }
 

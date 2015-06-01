@@ -16,6 +16,8 @@ import com.example.alexander.robotop.datastruct.ColorBound;
 import com.example.alexander.robotop.datastruct.MassCenter;
 import com.example.alexander.robotop.modell.Detector;
 import com.example.alexander.robotop.visualOrientation.Beacon;
+import com.example.alexander.robotop.visualOrientation.Homography;
+import com.example.alexander.robotop.visualOrientation.Selflocalization;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -24,6 +26,7 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
@@ -39,8 +42,9 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
     private MassCenter massCenter = MassCenter.getInstance();
     private ColorBound tmpColor = new ColorBound();
     private Beacons beacons = Beacons.getInstance();
-
+    private List<Beacon> seenBeacons = new ArrayList<>();
     private boolean showTouchedColor = false;
+    private Homography homography = Homography.getInstance();
     private Mat mRgba;
     private Scalar mBlobColorRgba;
     private Scalar mBlobColorHsv;
@@ -100,10 +104,8 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
         mOpenCvCameraView = (Tutorial3View) findViewById(R.id.java_surface_view);
 
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
-        mOpenCvCameraView.setMaxFrameSize(800, 600);
-        mOpenCvCameraView.setCvCameraViewListener(this);
-        mOpenCvCameraView.setMaxFrameSize(800, 600);
 
+        mOpenCvCameraView.setCvCameraViewListener(this);
     }
 
 
@@ -177,20 +179,87 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
             nRgba = Detector.detectBlob(mHsv,tmpColor);
             //TODO delete following methods coz they are written to test beacon methods
             MassCenter.getInstance().calculateMassCenter(mRgba);
-            for(int i =0; i< beacons.size(); i++) {
+            for(int i = 0; i < beacons.size(); i++) {
                 Beacon b = beacons.getBeacon(i);
+
                 b.searchBeaconPoint();
                 org.opencv.core.Point p = b.getRelativeCoordinate();
+
                 if(MassCenter.getInstance().getMassRect() != null && MassCenter.getInstance().getMassRect().size() >0 && MassCenter.getInstance().getMassRect().get(0) != null)
                 Log.d(TAG, "number first color Rects "+ MassCenter.getInstance().getMassRect().get(0).size());
                 if (p != null) {
                     Core.circle(nRgba, p, 10, new Scalar(100, 100, 100), 8);
-                    //Log.d(TAG, "My id is " + b.getId() + " point " + p.toString() + " and my sec color id " + b.centerIndex.second);
+                    seenBeacons.add(b);
+                    log(p,b);
                 }
             }
+            if(seenBeacons.size() >= 2) {
+                Beacon[] bs = selectBeacons(seenBeacons);
+                if(bs != null) {
+                    updateOdoWithBeacons(bs[0], bs[1]);
+                }
+            }
+            seenBeacons.clear();
             return nRgba;
         }
+
+
+        MassCenter.getInstance().calculateMassCenter(mRgba);
+        for(int i = 0; i < beacons.size(); i++) {
+            Beacon b = beacons.getBeacon(i);
+
+            b.searchBeaconPoint();
+            org.opencv.core.Point p = b.getRelativeCoordinate();
+
+            if(MassCenter.getInstance().getMassRect() != null && MassCenter.getInstance().getMassRect().size() >0 && MassCenter.getInstance().getMassRect().get(0) != null)
+                Log.d(TAG, "number first color Rects "+ MassCenter.getInstance().getMassRect().get(0).size());
+            if (p != null) {
+                Core.circle(mRgba, p, 10, new Scalar(100, 100, 100), 8);
+                seenBeacons.add(b);
+                log(p,b);
+            }
+        }
+        if(seenBeacons.size() >= 2) {
+            Beacon[] bs = selectBeacons(seenBeacons);
+            if(bs != null) {
+                updateOdoWithBeacons(bs[0], bs[1]);
+            }
+        }
+        seenBeacons.clear();
         return mRgba;
+    }
+
+    public Beacon[] selectBeacons(List<Beacon> beacons){
+        Beacon [] selected = new Beacon[2];
+
+        if(beacons.get(0).getId() == 0 && beacons.get(beacons.size()-1).getId() == 7){
+            selected[0] = beacons.get(0);
+            selected[1] = beacons.get(beacons.size()-1);
+            return selected;
+        }
+        for(int i = 0; i < beacons.size()-1; i++){
+            int id = beacons.get(i).getId();
+            if(beacons.get(i+1).getId() == id+1){
+                selected[0]= beacons.get(i);
+                selected[1] = beacons.get(i+1);
+                break;
+            }
+
+        }
+        if(selected[0] == null || selected[1] == null){
+            return null;
+        }
+        return selected;
+    }
+
+    public void log(Point p, Beacon b){
+        Log.d(TAG, "My id is " + b.getId() + " point " + p.toString() + " and my sec color id " + b.centerIndex.second);
+        Point a = homography.getPosition(p);
+        int x = (int)a.y;
+        int y = (int)-a.x;
+        Log.d(TAG, "x: " + x + " y: +" + y);
+
+
     }
 
     @Override
@@ -205,18 +274,18 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
 
         int x = (int)event.getX() - xOffset;
         int y = (int)event.getY() - yOffset;
-
+        int squareSize = 4;
         Log.i(TAG, "Touch image coordinates: (" + x + ", " + y + ")");
 
         if ((x < 0) || (y < 0) || (x > cols) || (y > rows)) return false;
 
         Rect touchedRect = new Rect();
 
-        touchedRect.x = (x>4) ? x-4 : 0;
-        touchedRect.y = (y>4) ? y-4 : 0;
+        touchedRect.x = (x>squareSize) ? x-squareSize : 0;
+        touchedRect.y = (y>squareSize) ? y-squareSize : 0;
 
-        touchedRect.width = (x+4 < cols) ? x + 4 - touchedRect.x : cols - touchedRect.x;
-        touchedRect.height = (y+4 < rows) ? y + 4 - touchedRect.y : rows - touchedRect.y;
+        touchedRect.width = (x+squareSize < cols) ? x + squareSize - touchedRect.x : cols - touchedRect.x;
+        touchedRect.height = (y+squareSize < rows) ? y + squareSize - touchedRect.y : rows - touchedRect.y;
 
         Mat touchedRegionRgba = mRgba.submat(touchedRect);
 
@@ -253,6 +322,21 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
 
     private void saveBallColor(){
         BallColors.colors.add(new ColorBound(tmpColor));
+    }
+
+    private void updateOdoWithBeacons(Beacon a, Beacon b){
+        Point egoP = homography.getPosition(a.getRelativeCoordinate());
+        egoP = new Point(egoP.y, -egoP.x);
+        Point egoP2 = homography.getPosition(b.getRelativeCoordinate());
+        egoP2 = new Point(egoP2.y, -egoP2.x);
+
+        com.example.alexander.robotop.datastruct.Point egoPoint = new com.example.alexander.robotop.datastruct.Point((int)egoP.x,(int)egoP.y);
+        com.example.alexander.robotop.datastruct.Point egoPoint2 = new com.example.alexander.robotop.datastruct.Point((int)egoP2.x, (int)egoP2.y);
+        com.example.alexander.robotop.datastruct.Point odoPoint = Selflocalization.selfLocalisation(egoPoint, egoPoint2, a.getWorldCoordinate(), b.getWorldCoordinate());
+        double angle = Selflocalization.getOrientation(odoPoint, a.getWorldCoordinate(),egoPoint);
+        Log.d("BeaconOdo", "x: " + odoPoint.getX() + " y: " + odoPoint.getY() + " angle: " + angle);
+
+
     }
 
 
