@@ -66,7 +66,7 @@ public class Beacon {
                 s.x = (sRect.x + sRect.width/2);
                 s.y = (sRect.y + sRect.height/2);
                // Log.d(TAG, " first : "+ f.toString() + " || second: " + s.toString());
-                if(f.y < s.y && (f.x - s.x < 5)){
+                if(f.x < s.x && (f.y - s.y < 5) &&(f.x - s.x < 3)){
 
                     return sRect;
                 }

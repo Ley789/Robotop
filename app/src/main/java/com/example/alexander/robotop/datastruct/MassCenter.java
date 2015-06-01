@@ -74,7 +74,7 @@ public class MassCenter {
             MatOfPoint points = new MatOfPoint(approxCurve.toArray());
             r = Imgproc.boundingRect(points);
             // Get bounding rect of contour
-            if(r.height * r.width > 120 && approxCurve.toArray().length < 7)
+            if(approxCurve.size().height > 3 && approxCurve.size().height < 7)
                rect.add(r);
         }
 
@@ -93,7 +93,6 @@ public class MassCenter {
         Imgproc.pyrDown(mPyrDownMat, mPyrDownMat);
         Imgproc.cvtColor(mPyrDownMat, mHsvMat, Imgproc.COLOR_RGB2HSV_FULL);
 
-       // Core.inRange(mHsvMat, c.getmLowerBound(), c.getmUpperBound(), mMask);
         mMask = Detector.detectBlob(mHsvMat,c);
         Imgproc.dilate(mMask, mDilatedMask, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(4, 4)));
 
