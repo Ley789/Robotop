@@ -111,7 +111,7 @@ public class BallcatcherActivity22 extends ActionBarActivity  implements CvCamer
 
 
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
-        mOpenCvCameraView.setMaxFrameSize(800, 600);
+        //mOpenCvCameraView.setMaxFrameSize(800, 600);
 
 
 

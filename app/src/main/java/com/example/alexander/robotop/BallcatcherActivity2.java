@@ -15,13 +15,17 @@ import android.widget.Toast;
 
 import com.example.alexander.robotop.ThreadControll.Executer;
 import com.example.alexander.robotop.datastruct.BallColors;
+import com.example.alexander.robotop.datastruct.Beacons;
 import com.example.alexander.robotop.datastruct.ColorBound;
+import com.example.alexander.robotop.datastruct.MassCenter;
 import com.example.alexander.robotop.movement.BallSearcher;
 import com.example.alexander.robotop.movement.RobotMovement;
 import com.example.alexander.robotop.robotData.RobotOdometry;
 import com.example.alexander.robotop.robotData.RobotTracker;
+import com.example.alexander.robotop.visualOrientation.Beacon;
 import com.example.alexander.robotop.visualOrientation.DetectBalls;
 import com.example.alexander.robotop.visualOrientation.Homography;
+import com.example.alexander.robotop.visualOrientation.Selflocalization;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -34,7 +38,9 @@ import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import static com.example.alexander.robotop.communication.Connection.comReadWrite;
@@ -47,11 +53,14 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
     private enum States {
         INIT, COLLECT, GO_HOME;
     }
-    private boolean lookForBeacons = false;
+    private final int LOOK_BEACON_MAX = 10;
+    private int beaconCount = 0;
+    private int halfWayLookCount = 0;
+    private boolean lookForBeacons = true;
     private boolean halfWayLook = false;
-    private boolean looking = true;
+    private boolean looking = true; //todo make false
     private final int CNT_LOOK = 3;
-
+    private final int APPROACH = 50;
     private int lookedOnce = 0;
     private int i = 0;
     int catched = 0;
@@ -70,7 +79,7 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
     private LinkedList<Point> points = new LinkedList<>();
     private LinkedList<com.example.alexander.robotop.datastruct.Point> worldCoordinates = new LinkedList<>();
     private int degreesTurned = 0;
-    private final int DEGREES_TO_TURN = 90;
+    private final int DEGREES_TO_TURN = 45;
     private static final String TAG = "Coord";
 
     private Executer<Mat> exe = new Executer<Mat>();
@@ -136,7 +145,7 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
         mOpenCvCameraView.setMaxFrameSize(1920, 1080);
 
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
-        mOpenCvCameraView.setMaxFrameSize(800, 600);
+        //mOpenCvCameraView.setMaxFrameSize(800, 600);
 
 
         mOpenCvCameraView.setCvCameraViewListener(this);
@@ -275,13 +284,23 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
         Log.d("inside", "inside");
         if(start) {
 
+            /*if(beaconCount<LOOK_BEACON_MAX){
+                //TODO when not two beacons are found -> do something
+                Log.d("Beacon", "looking for beacons");
+                beaconCount++;
+                if(lookForBeacons(mRgba)){
+                    beaconCount =LOOK_BEACON_MAX+100;
+                    looking=true;
+                }
+
+                if(beaconCount == LOOK_BEACON_MAX-1){
+                    move.robotTurn(45);
+                    beaconCount = 0;
+                }
+            }*/
+
             if (looking) {
                 lookForBalls(mRgba);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 lookedOnce++;
                 if(lookedOnce > CNT_LOOK) {//the robot looks 5 times before he goes on
                     lookedOnce = 0;
@@ -301,27 +320,26 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
             }//end if(looking)
 
             if(halfWayLook){
+                halfWayLookCount++;
                 Log.d("Halfway", "looking");
                 lookForBalls(mRgba);
-                if(worldCoordinates.isEmpty()){
-                    halfWayLook = false;
-                    looking = true;
-                    Log.d("Halfway", "cant find anymore");
-                }else{
-                    Log.d("Halfway", "got it");
-                    halfWayLook = false;
-                    catchBall(getNearestBall());
-                }
+                if(halfWayLookCount > 2) {
+                    if (worldCoordinates.isEmpty()) {
+                        halfWayLookCount = 0;
+                        halfWayLook = false;
+                        looking = true;
+                        Log.d("Halfway", "cant find anymore");
+
+                    } else {
+                        halfWayLookCount = 0;
+                        Log.d("Halfway", "got it");
+                        halfWayLook = false;
+                        catchBall(getNearestBall());
+                    }
+                }//end if(halfWayLookCount > 2)
             }// end if(halfWayLook)
 
-            if(lookForBeacons){
-                Log.d("Beacon", "looking for beacons");
-                if(lookForBeacons(mRgba)){
-                    lookForBeacons = false;
-                }else{
-                    move.robotTurn(DEGREES_TO_TURN);
-                }
-            }
+
 
         }// end if(start)
         return mRgba;
@@ -348,12 +366,58 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
     }
 
     public void goHome(){
-                updateOdoWithBeacons();
                 move.moveBlind(new com.example.alexander.robotop.datastruct.Point(0, 0)); //TODO drive home
     }
 
     public boolean lookForBeacons(Mat mRgba){
-        return true; // TODO implement
+        boolean success = false;
+        List<Beacon> seenBeacons = new ArrayList<>();
+        Beacons beacons = Beacons.getInstance();
+        MassCenter.getInstance().calculateMassCenter(mRgba);
+
+        for(int i =0; i< beacons.size(); i++) {
+            Beacon b = beacons.getBeacon(i);
+            b.searchBeaconPoint();
+            org.opencv.core.Point p = b.getRelativeCoordinate();
+            if(p != null){
+                seenBeacons.add(b);
+            }
+
+        }
+        if(seenBeacons.size() >= 2) {
+            Beacon[] bs = selectBeacons(seenBeacons);
+            if(bs != null) {
+                updateOdoWithBeacons(bs[0], bs[1]);
+                looking = true;
+                success = true;
+            }
+        }
+
+        seenBeacons.clear();
+        return success;
+    }
+
+    public Beacon[] selectBeacons(List<Beacon> beacons){
+        Beacon [] selected = new Beacon[2];
+
+        if(beacons.get(0).getId() == 0 && beacons.get(beacons.size()-1).getId() == 7){
+            selected[0] = beacons.get(0);
+            selected[1] = beacons.get(beacons.size()-1);
+            return selected;
+        }
+        for(int i = 0; i < beacons.size()-1; i++){
+            int id = beacons.get(i).getId();
+            if(beacons.get(i+1).getId() == id+1){
+                selected[0]= beacons.get(i);
+                selected[1] = beacons.get(i+1);
+                break;
+            }
+
+        }
+        if(selected[0] == null || selected[1] == null){
+            return null;
+        }
+        return selected;
     }
 
     public void lookForBalls(Mat mRgba){
@@ -432,7 +496,7 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
     }
 
     public void catchBall(com.example.alexander.robotop.datastruct.Point point){
-        if(odometry.getPoint().distance(point) > 120){
+        if(odometry.getPoint().distance(point) > APPROACH){
             Log.d("HalfWay", "halfway");
             move.moveHalfWay(point);
             halfWayLook = true;
@@ -445,19 +509,30 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
             e.printStackTrace();
         }
         move.raiseBar(RAISE_BAR);
-        move.robotMoveBlindForward(SAFETY_DIST*2/3);
+        move.robotMoveBlindForward(SAFETY_DIST);
 
         move.decreaseBar();
         catched++;
-        if((catched + 1) % 5 == 0){
+        if((catched) % 3 == 0 || catched == 10){ //TODO make constant
             bringAllToChamber();
         }else{
             looking = true;
         }
     }
 
-    private void updateOdoWithBeacons(){
-        //TODO implement
+    private void updateOdoWithBeacons(Beacon a, Beacon b){
+        Point egoP = homography.getPosition(a.getRelativeCoordinate());
+        Point egoP2 = homography.getPosition(b.getRelativeCoordinate());
+
+        com.example.alexander.robotop.datastruct.Point egoPoint = new com.example.alexander.robotop.datastruct.Point((int)egoP.x,(int)egoP.y);
+        com.example.alexander.robotop.datastruct.Point egoPoint2 = new com.example.alexander.robotop.datastruct.Point((int)egoP2.x, (int)egoP2.y);
+        com.example.alexander.robotop.datastruct.Point odoPoint = Selflocalization.selfLocalisation(egoPoint, egoPoint2, a.getWorldCoordinate(), b.getWorldCoordinate());
+        double angle = Selflocalization.getOrientation(odoPoint, a.getWorldCoordinate(),egoPoint);
+
+        odometry.setOdometry(odoPoint.getX(),odoPoint.getY(), (int)angle);
+        Log.d("BeaconOdo", "x: " + odoPoint.getX() + " y: " + odoPoint.getY() + " angle: " + angle);
+
+
     }
 
 

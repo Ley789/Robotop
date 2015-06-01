@@ -15,7 +15,7 @@ public class Detector {
         Mat threshold = new Mat();
 
         double lowerBound = c.getmLowerBound().val[0];
-        if(lowerBound < 20 || lowerBound > 340){
+        if(c.isRed()){
            return handleRedBlobs(mHsv);
         }
         Core.inRange(mHsv, c.getmLowerBound(), c.getmUpperBound(), threshold);
@@ -24,8 +24,8 @@ public class Detector {
     private static Mat handleRedBlobs(Mat mHsv){
         Mat threshold = new Mat();
         Mat threshold2 = new Mat();
-        Core.inRange(mHsv, new Scalar(0, 50, 50), new Scalar(20, 255, 255), threshold);
-        Core.inRange(mHsv, new Scalar(340,50,50), new Scalar(360,255,255), threshold2);
+        Core.inRange(mHsv, new Scalar(0, 100, 100,0), new Scalar(15, 255, 255,255), threshold);
+        Core.inRange(mHsv, new Scalar(220,100,100,0), new Scalar(360,255,255,255), threshold2);
         Core.bitwise_or(threshold,threshold2,threshold);
         return threshold;
     }

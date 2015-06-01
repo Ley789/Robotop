@@ -73,8 +73,8 @@ public class HomographyActivity extends ActionBarActivity implements CameraBridg
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
 
         mOpenCvCameraView.setCvCameraViewListener(this);
-        mOpenCvCameraView.setMaxFrameSize(800, 600);
-        //mOpenCvCameraView.setMaxFrameSize(1920,1080);
+       // mOpenCvCameraView.setMaxFrameSize(800, 600);
+        mOpenCvCameraView.setMaxFrameSize(1920,1080);
 
     }
 

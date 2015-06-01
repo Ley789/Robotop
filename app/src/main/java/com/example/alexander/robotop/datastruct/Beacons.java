@@ -19,6 +19,7 @@ public class Beacons {
                                               new Pair(2,3), new Pair(3,1), new Pair(3,0)};
 
     private static Beacons beacons;
+
     private List<Beacon> beaconList = new ArrayList<>();
 
     private Beacons(){
