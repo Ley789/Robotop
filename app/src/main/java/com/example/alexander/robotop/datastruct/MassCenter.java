@@ -74,7 +74,7 @@ public class MassCenter {
             MatOfPoint points = new MatOfPoint(approxCurve.toArray());
             r = Imgproc.boundingRect(points);
             // Get bounding rect of contour
-            if(approxCurve.size().height > 3 && approxCurve.size().height < 7)
+            if((r.width * r.height) >10)
                rect.add(r);
         }
 
@@ -94,9 +94,9 @@ public class MassCenter {
         Imgproc.cvtColor(mPyrDownMat, mHsvMat, Imgproc.COLOR_RGB2HSV_FULL);
 
         mMask = Detector.detectBlob(mHsvMat,c);
-        Imgproc.dilate(mMask, mDilatedMask, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(4, 4)));
+        Imgproc.dilate(mMask, mDilatedMask, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(2 ,2)));
 
-        Imgproc.erode(mDilatedMask, mDilatedMask, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(4, 4)));
+        //Imgproc.erode(mDilatedMask, mDilatedMask, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(4, 4)));
 
         List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
         Imgproc.findContours(mDilatedMask, contours, mHierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);

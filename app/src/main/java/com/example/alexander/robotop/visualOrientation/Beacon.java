@@ -2,7 +2,6 @@ package com.example.alexander.robotop.visualOrientation;
 
 import android.util.Log;
 
-import com.example.alexander.robotop.datastruct.Beacons;
 import com.example.alexander.robotop.datastruct.MassCenter;
 import com.example.alexander.robotop.datastruct.Pair;
 import com.example.alexander.robotop.datastruct.Point;
@@ -43,7 +42,7 @@ public class Beacon {
             this.relativeCoordinate = null;
             return;
         }
-        Log.d(TAG, "" + massCenter.size());
+
         Rect r = filterData(massCenter.get(centerIndex.first)
                 , massCenter.get(centerIndex.second));
         if (r != null) {
@@ -65,7 +64,7 @@ public class Beacon {
             for(Rect sRect: second){
                 s.x = (sRect.x + sRect.width/2);
                 s.y = (sRect.y + sRect.height/2);
-               // Log.d(TAG, " first : "+ f.toString() + " || second: " + s.toString());
+               Log.d(TAG, " first : "+ f.toString() + " || second: " + s.toString());
                 if(f.y < s.y && (f.x - s.x < 10)){
 
                     return sRect;

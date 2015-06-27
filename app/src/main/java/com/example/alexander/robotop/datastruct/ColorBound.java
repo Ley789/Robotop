@@ -10,7 +10,9 @@ public class ColorBound {
     private Scalar mLowerBound = new Scalar(0);
     private Scalar mUpperBound = new Scalar(0);
     // Color radius for range checking in HSV color space
-    private Scalar mColorRadius = new Scalar(25,100,100,0);
+    //private Scalar mColorRadius = new Scalar(25,100,100,0);
+    private Scalar mColorRadius = new Scalar(15,50,50,0);
+
 
     public ColorBound(){}
     public ColorBound(ColorBound c){

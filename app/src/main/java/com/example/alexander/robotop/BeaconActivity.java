@@ -211,8 +211,6 @@ public class BeaconActivity extends ActionBarActivity implements CameraBridgeVie
             b.searchBeaconPoint();
             org.opencv.core.Point p = b.getRelativeCoordinate();
 
-            if(MassCenter.getInstance().getMassRect() != null && MassCenter.getInstance().getMassRect().size() >0 && MassCenter.getInstance().getMassRect().get(0) != null)
-                Log.d(TAG, "number first color Rects "+ MassCenter.getInstance().getMassRect().get(0).size());
             if (p != null) {
                 Core.circle(mRgba, p, 10, new Scalar(100, 100, 100), 8);
                 seenBeacons.add(b);

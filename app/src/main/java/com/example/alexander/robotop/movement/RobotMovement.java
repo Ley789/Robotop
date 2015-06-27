@@ -24,7 +24,7 @@ public class RobotMovement {
     private double adjustTurn=1.135;
     private RobotOdometry robotOd;
     private static RobotMovement instance;
-    private static int maxDrive = 80;
+    private static int maxDrive = 20;
 
     private RobotMovement(){
         robotOd = RobotOdometry.getInstance();
@@ -255,21 +255,39 @@ public class RobotMovement {
     }
 
     public void moveBlindWithSafety(Point goal, int safety){
+        int rest = 0;
         RobotOdometry odometry = RobotOdometry.getInstance();
         Point currentPosition = odometry.getPoint();
         robotTurn(currentPosition.degreeToPoint(goal) - odometry.getAngle());
-        robotMoveBlindForward(currentPosition.distance(goal) - safety);
+        rest = robotMoveForward(currentPosition.distance(goal) - safety);
+        while(rest > 0){
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            rest = robotMoveForward(rest);
+        }
 
 
     }
 
     public void moveHalfWay(Point goal){
+        int rest = 0;
         RobotOdometry odometry = RobotOdometry.getInstance();
         Point currentPosition = odometry.getPoint();
         robotTurn(currentPosition.degreeToPoint(goal) - odometry.getAngle());
         int dist = currentPosition.distance(goal);
         int halfDist = dist/2;
-        robotMoveBlindForward(halfDist);
+        rest = robotMoveForward(halfDist);
+        while(rest > 0) {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            rest = robotMoveForward(rest);
+        }
 
 
     }

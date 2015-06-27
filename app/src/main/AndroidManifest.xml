@@ -52,7 +52,7 @@
 
         </activity>
         <activity
-            android:name=".BallcatcherActivity2"
+            android:name=".BallcatcherActivityFinalWithBug0"
             android:label="@string/title_activity_ballcatcher"
             android:screenOrientation="landscape"
             android:configChanges="keyboardHidden|orientation">
@@ -60,7 +60,7 @@
         </activity>
 
         <activity
-            android:name=".BallcatcherActivity22"
+            android:name=".BallcatcherActivityTest"
             android:label="@string/title_activity_ballcatcher"
             android:screenOrientation="landscape"
             android:configChanges="keyboardHidden|orientation">

@@ -39,7 +39,7 @@ import java.util.concurrent.ExecutionException;
 /**
  * Created by Alexander on 28/04/2015.
  */
-public class BallcatcherActivity22 extends ActionBarActivity  implements CvCameraViewListener2 {
+public class BallcatcherActivityTest extends ActionBarActivity  implements CvCameraViewListener2 {
 
     private enum States {
         INIT, COLLECT, GO_HOME;

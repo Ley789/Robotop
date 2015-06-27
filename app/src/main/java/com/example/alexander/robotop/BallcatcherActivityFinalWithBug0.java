@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.alexander.robotop.ThreadControll.Executer;
+import com.example.alexander.robotop.bugAlgorithms.Bug0Alg;
 import com.example.alexander.robotop.datastruct.BallColors;
 import com.example.alexander.robotop.datastruct.Beacons;
 import com.example.alexander.robotop.datastruct.ColorBound;
@@ -48,17 +49,18 @@ import static com.example.alexander.robotop.communication.Connection.comReadWrit
 /**
  * Created by Alexander on 28/04/2015.
  */
-public class BallcatcherActivity2 extends ActionBarActivity  implements CvCameraViewListener2 {
+public class BallcatcherActivityFinalWithBug0 extends ActionBarActivity  implements CvCameraViewListener2 {
 
     private enum States {
         INIT, COLLECT, GO_HOME;
     }
+    private Bug0Alg bug0 = new Bug0Alg();
     private final int LOOK_BEACON_MAX = 10;
     private int beaconCount = 0;
     private int halfWayLookCount = 0;
     private boolean lookForBeacons = true;
     private boolean halfWayLook = false;
-    private boolean looking = true; //todo make false
+    private boolean looking = false;
     private final int CNT_LOOK = 3;
     private final int APPROACH = 50;
     private int lookedOnce = 0;
@@ -284,8 +286,7 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
         Log.d("inside", "inside");
         if(start) {
 
-            /*if(beaconCount<LOOK_BEACON_MAX){
-                //TODO when not two beacons are found -> do something
+            if(beaconCount<LOOK_BEACON_MAX){
                 Log.d("Beacon", "looking for beacons");
                 beaconCount++;
                 if(lookForBeacons(mRgba)){
@@ -297,7 +298,7 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
                     move.robotTurn(45);
                     beaconCount = 0;
                 }
-            }*/
+            }
 
             if (looking) {
                 lookForBalls(mRgba);
@@ -354,11 +355,11 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
     }
 
     public void bringAllToChamber(){
-        move.moveBlind(new com.example.alexander.robotop.datastruct.Point(aimX, aimY));
+        bug0.bug0d(new com.example.alexander.robotop.datastruct.Point(aimX, aimY));
         comReadWrite(new byte[]{'o', (byte) 255, '\r', '\n'});
         move.robotDrive(-SAFETY_DIST);
         move.decreaseBar();
-        if(catched >= 10){
+        if(catched >= 3){
             goHome();
         }else{
             looking = true;
@@ -366,7 +367,7 @@ public class BallcatcherActivity2 extends ActionBarActivity  implements CvCamera
     }
 
     public void goHome(){
-                move.moveBlind(new com.example.alexander.robotop.datastruct.Point(0, 0)); //TODO drive home
+                bug0.bug0d(new com.example.alexander.robotop.datastruct.Point(0, 0)); //TODO drive home
     }
 
     public boolean lookForBeacons(Mat mRgba){
